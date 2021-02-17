@@ -1,0 +1,4 @@
+rootProject.name = 'reactive-opa-java-client'
+
+include 'rego-java'
+include 'reactive-opa-client'

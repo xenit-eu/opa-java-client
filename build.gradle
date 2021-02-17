@@ -1,0 +1,8 @@
+ext {
+    lombokVersion = '1.18.16'
+    testContainersVersion = '1.15.2'
+    assertjVersion = '3.19.0'
+    junitVersion = '5.7.1'
+    jacksonVersion = '2.12.1'
+    slf4jVersion = '1.7.30'
+}
