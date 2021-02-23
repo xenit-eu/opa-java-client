@@ -16,4 +16,9 @@ public class DataComponent implements DataApi {
     public <TData> CompletableFuture<Void> upsertData(String path, TData data) {
         return opaRestClient.put(DATA_ENDPOINT + path, data);
     }
+
+    @Override
+    public <TData> CompletableFuture<TData> getData(String path, Class<TData> responseType) {
+        return opaRestClient.get(DATA_ENDPOINT + path, responseType);
+    }
 }

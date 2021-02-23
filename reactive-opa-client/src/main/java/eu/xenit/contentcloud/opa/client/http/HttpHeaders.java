@@ -1,4 +1,4 @@
-package eu.xenit.contentcloud.opa.client.api.io.http;
+package eu.xenit.contentcloud.opa.client.http;
 
 import java.net.URI;
 import java.util.List;
@@ -7,10 +7,21 @@ import java.util.Optional;
 public interface HttpHeaders {
 
     final class HeaderNames {
+
+
+
         private HeaderNames() { }
 
         public static final String LOCATION = "Location";
         public static final String CONTENT_TYPE = "Content-Type";
+        public static final String ACCEPT = "Accept";
+    }
+
+    final class MediaTypes {
+        private MediaTypes() {}
+
+        private static final String APPLICATION_JSON = "application/json";
+
     }
 
 

@@ -3,18 +3,14 @@ package eu.xenit.contentcloud.opa.client;
 import eu.xenit.contentcloud.opa.client.api.CompileApi;
 import eu.xenit.contentcloud.opa.client.api.DataApi;
 import eu.xenit.contentcloud.opa.client.api.PolicyApi;
-import eu.xenit.contentcloud.opa.client.api.io.http.JdkHttpClient;
-import eu.xenit.contentcloud.opa.client.api.io.http.ReactiveHttpClient;
-import eu.xenit.contentcloud.opa.client.api.io.json.JacksonObjectMapper;
-import eu.xenit.contentcloud.opa.client.api.io.json.JsonObjectMapper;
+import eu.xenit.contentcloud.opa.client.http.JdkHttpClient;
+import eu.xenit.contentcloud.opa.client.http.ReactiveHttpClient;
+import eu.xenit.contentcloud.opa.client.http.mapper.JacksonObjectMapper;
+import eu.xenit.contentcloud.opa.client.http.mapper.ObjectMapper;
 import eu.xenit.contentcloud.opa.client.impl.DataComponent;
 import eu.xenit.contentcloud.opa.client.impl.CompileComponent;
 import eu.xenit.contentcloud.opa.client.impl.PolicyComponent;
-import eu.xenit.contentcloud.opa.client.rest.RequestListener;
-import eu.xenit.contentcloud.opa.client.rest.ResponseListener;
 import eu.xenit.contentcloud.opa.client.rest.OpaRestClient;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -52,6 +48,11 @@ public class ReactiveOpaClient implements PolicyApi, DataApi, CompileApi {
         return this.dataApi.upsertData(path, data);
     }
 
+    @Override
+    public <TData> CompletableFuture<TData> getData(String path, Class<TData> responseType) {
+        return this.dataApi.getData(path, responseType);
+    }
+
 
     /**
      * Builder for {@link ReactiveOpaClient}
@@ -60,10 +61,7 @@ public class ReactiveOpaClient implements PolicyApi, DataApi, CompileApi {
 
         private String url = "http://localhost:8181";
         private ReactiveHttpClient httpClient = JdkHttpClient.newClient();
-        private JsonObjectMapper jsonMapper = new JacksonObjectMapper();
-
-        private List<RequestListener> requestListeners = new ArrayList<>();
-        private List<ResponseListener> reponselisteners = new ArrayList<>();
+        private ObjectMapper jsonMapper = new JacksonObjectMapper();
 
         /**
          * @param url URL including protocol and port
@@ -80,28 +78,29 @@ public class ReactiveOpaClient implements PolicyApi, DataApi, CompileApi {
             return this;
         }
 
-        public Builder jsonMapper(JsonObjectMapper jsonMapper) {
+        public Builder jsonMapper(ObjectMapper jsonMapper) {
             Objects.requireNonNull(httpClient);
             this.jsonMapper = jsonMapper;
             return this;
         }
 
-        public Builder onRequest(RequestListener listener) {
-            Objects.requireNonNull(listener);
-            this.requestListeners.add(listener);
-            return this;
-        }
-
-        public Builder onResponse(ResponseListener listener) {
-            Objects.requireNonNull(listener);
-            this.reponselisteners.add(listener);
-            return this;
-        }
+//        public Builder onRequest(RequestListener listener) {
+//            Objects.requireNonNull(listener);
+//            this.requestListeners.add(listener);
+//            return this;
+//        }
+//
+//        public Builder onResponse(ResponseListener listener) {
+//            Objects.requireNonNull(listener);
+//            this.reponselisteners.add(listener);
+//            return this;
+//        }
 
         public ReactiveOpaClient build() {
             var config = new OpaConfiguration(this.url);
 
-            OpaRestClient opaRestClient = new OpaRestClient(config, httpClient, jsonMapper, this.requestListeners, this.reponselisteners);
+//            OpaRestClient opaRestClient = new OpaRestClient(config, httpClient, jsonMapper, this.requestListeners, this.reponselisteners);
+            OpaRestClient opaRestClient = new OpaRestClient(config, httpClient);
             return new ReactiveOpaClient(
                     new PolicyComponent(opaRestClient),
                     new DataComponent(opaRestClient),

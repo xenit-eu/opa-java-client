@@ -5,11 +5,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import eu.xenit.contentcloud.opa.client.api.CompileApi;
 import eu.xenit.contentcloud.opa.client.api.CompileApi.PartialEvaluationRequest;
 import eu.xenit.contentcloud.opa.client.api.DataApi;
+import eu.xenit.contentcloud.opa.client.api.DataApi.GetDocumentResponse;
 import eu.xenit.contentcloud.opa.client.api.PolicyApi.ListPoliciesResponse;
+import eu.xenit.contentcloud.opa.client.api.model.Term.Call;
+import eu.xenit.contentcloud.opa.client.api.model.Term.NumberValue;
+import eu.xenit.contentcloud.opa.client.api.model.Term.Ref;
+import eu.xenit.contentcloud.opa.client.api.model.Term.Var;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -34,21 +39,12 @@ class OpaClientIntegrationTests {
 
     private final ReactiveOpaClient opaClient = ReactiveOpaClient.builder()
             .url("http://" + opaContainer.getHost() + ":" + opaContainer.getMappedPort(OPA_EXPOSED_PORT))
-            .onRequest(request -> request.log(log::info))
-            .onResponse(response -> response.log(log::info))
             .build();
 
     @Test
     void opaIsRunningInDocker() {
         assertThat(opaContainer.isRunning()).isTrue();
     }
-
-//    private static OpaRestClient opaRestClient() {
-//        var url = "http://" + opaContainer.getHost() + ":" + opaContainer.getMappedPort(OPA_EXPOSED_PORT);
-//        var config = new OpaConfiguration(url);
-//        return new OpaRestClient(config, JdkHttpClient.newClient(), new JacksonObjectMapper());
-//    }
-
 
     @Nested
     class PolicyTests {
@@ -61,6 +57,12 @@ class OpaClientIntegrationTests {
             assertThat(response.getResult()).isEmpty();
         }
     }
+
+    public static class DataObject extends HashMap<String, Object> {
+
+    }
+
+    ;
 
     @Nested
     class Scenarios {
@@ -75,25 +77,55 @@ class OpaClientIntegrationTests {
          *     <li>Load the resulting set of query ASTs out of the JSON response.</li>
          * </ul>
          */
+
+
         @Test
         void regoPythonSample() throws ExecutionException, InterruptedException {
-            @Getter
-            class PiDocument {
-                double pi = Math.PI;
-            }
+            // load data.pi into OPA
+            opaClient.upsertData("/", Map.of("pi", 3.14D)).get();
 
-            // load PiDocument into OPA as data.
-            opaClient.upsertData("/", new PiDocument()).get();
+            // fetch it again
+            var data = opaClient.getData("/", GetDocumentResponse.class).get();
+            assertThat(data.getResult())
+                    .isNotNull()
+                    .hasFieldOrPropertyWithValue("pi", 3.14D);
 
             // Use OPA's Compile API to partially evaluate a query. Treat 'input.radius' as unknown.
-            var result = opaClient.compile(new PartialEvaluationRequest(
+            var compile = opaClient.compile(new PartialEvaluationRequest(
                     "(data.pi * input.radius * 2) >= input.min_radius",
                     Map.of("min_radius", 4),
                     List.of("input.radius"))).get();
 
-            log.info("test test");
+            assertThat(compile).isNotNull();
+            assertThat(compile.getResult()).isNotNull();
+            assertThat(compile.getResult().getQueries())
+                    .isNotNull()
+                    .singleElement() // 1 query
+                    .satisfies(query -> assertThat(query)
+                            .singleElement() // 1 expression
+                            .satisfies(expr -> assertThat(expr.getTerms()).satisfies(terms -> {
+                                assertThat(terms).first()
+                                        .isInstanceOf(Ref.class)
+                                        .hasFieldOrPropertyWithValue("value", List.of(new Var("gte")));
+                                assertThat(terms).element(1)
+                                        .isInstanceOfSatisfying(Call.class, call -> {
+                                            assertThat(call.getValue()).first()
+                                                    .isInstanceOf(Ref.class)
+                                                    .hasFieldOrPropertyWithValue("value", List.of(new Var("mul")));
+                                            // call
+                                            //  ref var mul
+                                            //  number
+                                            //  ref
+                                            //      var(input)
+                                            //      string(radius)
 
+                                        });
 
+                                assertThat(terms).last()
+                                        .isInstanceOf(NumberValue.class)
+                                        .hasFieldOrPropertyWithValue("value", 4L);
+
+                            })));
         }
 
     }

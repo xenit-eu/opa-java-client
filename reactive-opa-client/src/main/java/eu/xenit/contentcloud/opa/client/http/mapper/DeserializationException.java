@@ -1,6 +1,10 @@
-package eu.xenit.contentcloud.opa.client.api.io.json;
+package eu.xenit.contentcloud.opa.client.http.mapper;
 
 public class DeserializationException extends RuntimeException {
+
+    public DeserializationException(String message) {
+        super(message);
+    }
 
     public DeserializationException(Throwable cause) {
         super(cause);

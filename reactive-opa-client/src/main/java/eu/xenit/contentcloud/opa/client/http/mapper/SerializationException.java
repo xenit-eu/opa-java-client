@@ -1,4 +1,4 @@
-package eu.xenit.contentcloud.opa.client.api.io.json;
+package eu.xenit.contentcloud.opa.client.http.mapper;
 
 public class SerializationException extends RuntimeException {
 
@@ -8,5 +8,9 @@ public class SerializationException extends RuntimeException {
 
     public SerializationException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public SerializationException(String msg) {
+        super(msg);
     }
 }

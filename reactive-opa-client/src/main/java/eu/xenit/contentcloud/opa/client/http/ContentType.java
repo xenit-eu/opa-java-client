@@ -1,4 +1,4 @@
-package eu.xenit.contentcloud.opa.client.api.io.http;
+package eu.xenit.contentcloud.opa.client.http;
 
 public interface ContentType {
 
