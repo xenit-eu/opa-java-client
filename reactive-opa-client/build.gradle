@@ -8,11 +8,12 @@ repositories {
 
 dependencies {
     api "org.slf4j:slf4j-api:${slf4jVersion}"
+    api project(":rego-java")
+
+    api "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-
-    compileOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
@@ -21,10 +22,9 @@ dependencies {
     testImplementation "org.assertj:assertj-core:${assertjVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
 
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
-    testRuntime "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    testRuntime "org.slf4j:slf4j-simple:${slf4jVersion}"
-
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testRuntimeOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    testRuntimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
 
 }
 

@@ -1,7 +1,7 @@
 package eu.xenit.contentcloud.opa.client.api;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
-import eu.xenit.contentcloud.opa.client.api.model.QuerySet;
+import eu.xenit.contentcloud.opa.rego.ast.QuerySet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

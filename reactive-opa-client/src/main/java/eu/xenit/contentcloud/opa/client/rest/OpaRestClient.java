@@ -1,101 +1,50 @@
 package eu.xenit.contentcloud.opa.client.rest;
 
-import eu.xenit.contentcloud.opa.client.OpaConfiguration;
-import eu.xenit.contentcloud.opa.client.http.MediaType;
-import eu.xenit.contentcloud.opa.client.http.ReactiveHttpClient;
-
-import eu.xenit.contentcloud.opa.client.http.ReactiveHttpClient.ReactiveHttpResponse;
-import java.net.URI;
+import eu.xenit.contentcloud.opa.client.api.PolicyApi.DeletePolicyResponse;
+import eu.xenit.contentcloud.opa.client.rest.http.HttpRequestHeaders;
 import java.util.concurrent.CompletableFuture;
-import lombok.RequiredArgsConstructor;
+import java.util.function.Consumer;
 
-@RequiredArgsConstructor
-public class OpaRestClient /* implements AutoCloseable */ {
+public interface OpaRestClient {
 
-    private final OpaConfiguration configuration;
-    private final ReactiveHttpClient httpClient;
-//    private final ObjectMapper jsonMapper;
+    <TResponse> CompletableFuture<TResponse> get(String path,
+            Consumer<HttpRequestHeaders> headersCallback, Class<TResponse> responseType);
 
-//    private final List<RequestListener> requestListeners;
-//    private final List<ResponseListener> responseListeners;
+    <TRequest, TResponse> CompletableFuture<TResponse> post(
+            String path, Consumer<HttpRequestHeaders> headersCallback,
+            TRequest requestBody, Class<TResponse> responseType);
 
-//    public OpaRestClient(OpaConfiguration configuration, ReactiveHttpClient httpClient, JsonObjectMapper jsonMapper) {
-//        this(configuration, httpClient, jsonMapper, Collections.emptyList(), Collections.emptyList());
-//    }
+    <TRequest, TResponse> CompletableFuture<TResponse> put(
+            String path, Consumer<HttpRequestHeaders> headersCallback,
+            TRequest requestBody, Class<TResponse> responseType);
 
-    private static final String MEDIA_APPLICATION_JSON = "application/json";
+    <TResponse> CompletableFuture<TResponse> delete(String path,
+            Consumer<HttpRequestHeaders> headersCallback, Class<TResponse> responseType);
 
-    private URI resolve(String path) {
-        return URI.create(this.configuration.getUrl()).resolve(path);
+    default <T> CompletableFuture<T> get(String path, Class<T> responseType) {
+        return this.get(path, null, responseType);
     }
 
-    public <T> CompletableFuture<T> get(String path, Class<T> responseType) {
-        return this.httpClient
-                .get(this.resolve(path))
-                .accept(MediaType.APPLICATION_JSON)
-                .response()
-                .body(responseType)
-                .execute()
-                .thenApply(ReactiveHttpResponse::body);
-
-//                .whenCompleteAsync(this::handleOnResponse)
-//                .thenApply(response -> jsonMapper.deserialize(response.body(), responseType));
+    default <TRequest, TResponse> CompletableFuture<TResponse> post(
+            String path, TRequest requestBody, Class<TResponse> responseType) {
+        return this.post(path, null, requestBody, responseType);
     }
 
-    public <TRequest, TResponse> CompletableFuture<TResponse> put(String path, TRequest object,
-            Class<TResponse> responseType) {
-        return this.httpClient
-                .put(this.resolve(path))
-                .accept(MEDIA_APPLICATION_JSON)
-                .body(object)
-                .response()
-                .body(responseType)
-                .execute()
-                .thenApply(ReactiveHttpResponse::body);
+    default <TRequest, TResponse> CompletableFuture<TResponse> put(
+            String path, TRequest requestBody, Class<TResponse> responseType) {
+        return this.put(path, null, requestBody, responseType);
     }
 
-    public <TRequest> CompletableFuture<Void> put(String path, TRequest object) {
-        return this.httpClient
-                .put(this.resolve(path))
-                .accept(MEDIA_APPLICATION_JSON)
-                .body(object)
-//                .configure(this::handleOnRequest)
-                .response()
-                .execute()
-//                .whenCompleteAsync(this::handleOnResponse)
-                .thenAccept(response -> {
-                    // check status code, expecting 204 ?
-                });
+    default <TRequest> CompletableFuture<Void> put(String path, TRequest requestBody) {
+        return this.put(path, null, requestBody, Void.class);
     }
 
-
-    public <TRequest, TResponse> CompletableFuture<TResponse> post(String path, TRequest object,
-            Class<TResponse> responseType) {
-        return this.httpClient
-                .post(this.resolve(path))
-                .accept(MEDIA_APPLICATION_JSON)
-                .body(object)
-                .response()
-                .body(responseType)
-                .execute()
-//                .whenCompleteAsync(this::handleOnResponse)
-//                .thenApply(response -> jsonMapper.deserialize(response.body(), responseType));
-                .thenApply(ReactiveHttpResponse::body);
+    default <TResponse> CompletableFuture<TResponse> delete(String path, Class<TResponse> responseType) {
+        return this.delete(path, null, responseType);
     }
 
-//    private void handleOnRequest(HttpRequestBodySpec request) {
-//        this.requestListeners.forEach(listener -> listener.accept(request));
-//    }
+    void configure(Consumer<RestClientConfiguration> callback);
 
-//    private void handleOnResponse(ReactiveHttpResponse response, Throwable exception) {
-//        if (exception == null) {
-//            this.responseListeners.forEach(listener -> listener.accept(response));
-//        }
-//    }
-//
-//    @Override
-//    public void close() {
-//        this.responseListeners.clear();
-//        this.requestListeners.clear();
-//    }
+
+
 }

@@ -21,4 +21,6 @@ public class DataComponent implements DataApi {
     public <TData> CompletableFuture<TData> getData(String path, Class<TData> responseType) {
         return opaRestClient.get(DATA_ENDPOINT + path, responseType);
     }
+
+
 }

@@ -1,18 +1,21 @@
 package eu.xenit.contentcloud.opa.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.xenit.contentcloud.opa.client.api.CompileApi;
 import eu.xenit.contentcloud.opa.client.api.DataApi;
 import eu.xenit.contentcloud.opa.client.api.PolicyApi;
-import eu.xenit.contentcloud.opa.client.http.JdkHttpClient;
-import eu.xenit.contentcloud.opa.client.http.ReactiveHttpClient;
-import eu.xenit.contentcloud.opa.client.http.mapper.JacksonObjectMapper;
-import eu.xenit.contentcloud.opa.client.http.mapper.ObjectMapper;
 import eu.xenit.contentcloud.opa.client.impl.DataComponent;
 import eu.xenit.contentcloud.opa.client.impl.CompileComponent;
 import eu.xenit.contentcloud.opa.client.impl.PolicyComponent;
 import eu.xenit.contentcloud.opa.client.rest.OpaRestClient;
+import eu.xenit.contentcloud.opa.client.rest.RestClientConfiguration.LogSpecification;
+import eu.xenit.contentcloud.opa.client.rest.client.jdk.DefaultOpaRestClient;
+import java.net.http.HttpClient;
+import java.net.http.HttpClient.Redirect;
+import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import lombok.extern.slf4j.Slf4j;
 
 public class ReactiveOpaClient implements PolicyApi, DataApi, CompileApi {
 
@@ -44,6 +47,21 @@ public class ReactiveOpaClient implements PolicyApi, DataApi, CompileApi {
     }
 
     @Override
+    public CompletableFuture<UpsertPolicyResponse> upsertPolicy(String id, String policy) {
+        return this.policyApi.upsertPolicy(id, policy);
+    }
+
+    @Override
+    public CompletableFuture<GetPolicyResponse> getPolicy(String id) {
+        return this.policyApi.getPolicy(id);
+    }
+
+    @Override
+    public CompletableFuture<DeletePolicyResponse> deletePolicy(String id) {
+        return this.policyApi.deletePolicy(id);
+    }
+
+    @Override
     public <TData> CompletableFuture<Void> upsertData(String path, TData data) {
         return this.dataApi.upsertData(path, data);
     }
@@ -57,55 +75,57 @@ public class ReactiveOpaClient implements PolicyApi, DataApi, CompileApi {
     /**
      * Builder for {@link ReactiveOpaClient}
      */
+    @Slf4j
     public static class Builder {
 
         private String url = "http://localhost:8181";
-        private ReactiveHttpClient httpClient = JdkHttpClient.newClient();
-        private ObjectMapper jsonMapper = new JacksonObjectMapper();
+        private OpaRestClient restClient = null;
 
         /**
          * @param url URL including protocol and port
          */
         public Builder url(String url) {
-            Objects.requireNonNull(httpClient);
+            Objects.requireNonNull(url);
             this.url = url;
             return this;
         }
 
-        public Builder httpClient(ReactiveHttpClient httpClient) {
-            Objects.requireNonNull(httpClient);
-            this.httpClient = httpClient;
+        public Builder restClient(OpaRestClient restClient) {
+            Objects.requireNonNull(restClient);
+            this.restClient = restClient;
             return this;
         }
-
-        public Builder jsonMapper(ObjectMapper jsonMapper) {
-            Objects.requireNonNull(httpClient);
-            this.jsonMapper = jsonMapper;
-            return this;
-        }
-
-//        public Builder onRequest(RequestListener listener) {
-//            Objects.requireNonNull(listener);
-//            this.requestListeners.add(listener);
-//            return this;
-//        }
-//
-//        public Builder onResponse(ResponseListener listener) {
-//            Objects.requireNonNull(listener);
-//            this.reponselisteners.add(listener);
-//            return this;
-//        }
 
         public ReactiveOpaClient build() {
-            var config = new OpaConfiguration(this.url);
 
-//            OpaRestClient opaRestClient = new OpaRestClient(config, httpClient, jsonMapper, this.requestListeners, this.reponselisteners);
-            OpaRestClient opaRestClient = new OpaRestClient(config, httpClient);
+            var opaRestClient = this.getOrCreateDefaultRestClient();
+
+            
             return new ReactiveOpaClient(
                     new PolicyComponent(opaRestClient),
                     new DataComponent(opaRestClient),
                     new CompileComponent(opaRestClient));
 
+        }
+
+        private OpaRestClient getOrCreateDefaultRestClient() {
+            var client = this.restClient;
+
+            // create the default client, if not provided by the builder
+            if (client == null) {
+                var httpClient = HttpClient.newBuilder()
+                        .connectTimeout(Duration.ofSeconds(5))
+                        .followRedirects(Redirect.NORMAL)
+                        .build();
+                client = new DefaultOpaRestClient(httpClient, new ObjectMapper());
+            }
+
+            // configure the provided client
+            client.configure(config -> config
+                    .baseUrl(this.url)
+                    .logging(LogSpecification::all));
+
+            return client;
         }
     }
 }

@@ -1,5 +1,4 @@
 plugins {
-
     id 'java-library'
 }
 
@@ -8,5 +7,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 }

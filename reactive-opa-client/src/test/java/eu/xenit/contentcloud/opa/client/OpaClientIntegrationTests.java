@@ -1,22 +1,27 @@
 package eu.xenit.contentcloud.opa.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import eu.xenit.contentcloud.opa.client.api.CompileApi;
 import eu.xenit.contentcloud.opa.client.api.CompileApi.PartialEvaluationRequest;
 import eu.xenit.contentcloud.opa.client.api.DataApi;
 import eu.xenit.contentcloud.opa.client.api.DataApi.GetDocumentResponse;
 import eu.xenit.contentcloud.opa.client.api.PolicyApi.ListPoliciesResponse;
-import eu.xenit.contentcloud.opa.client.api.model.Term.Call;
-import eu.xenit.contentcloud.opa.client.api.model.Term.NumberValue;
-import eu.xenit.contentcloud.opa.client.api.model.Term.Ref;
-import eu.xenit.contentcloud.opa.client.api.model.Term.Var;
-import java.util.HashMap;
+import eu.xenit.contentcloud.opa.client.rest.http.HttpStatusException;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -49,20 +54,68 @@ class OpaClientIntegrationTests {
     @Nested
     class PolicyTests {
 
+        private static final String PATH_EXAMPLE_1 = "fixtures/openpolicyagent.org/examples/policies-example-1.txt";
+        private static final String PATH_EXAMPLE_2 = "fixtures/openpolicyagent.org/examples/policies-example-2.txt";
+
         @Test
+        @Order(1)
+        void upsertPlainTextPolicy_shouldSucceed() throws IOException {
+            String content = loadResourceAsString(PATH_EXAMPLE_1);
+
+            var result = opaClient.upsertPolicy("example1", content).join();
+            assertThat(result).isNotNull();
+
+            var getPolicyResponse = opaClient.getPolicy("example1").join();
+            assertThat(getPolicyResponse.getResult()).isNotNull();
+            assertThat(getPolicyResponse.getResult().getRaw()).isEqualTo(content);
+        }
+
+        @Test
+        void upsertBogusPolicy_shouldFail() {
+            String content = "invalid policy";
+
+            var result = opaClient.upsertPolicy("example1", content);
+
+            assertThatExceptionOfType(CompletionException.class).isThrownBy(result::join)
+                    .havingCause().isInstanceOfSatisfying(HttpStatusException.class, httpStatusEx -> {
+                assertThat(httpStatusEx.statusCode()).isEqualTo(400);
+            });
+        }
+
+        @Test
+        @Order(2)
+        void deletePolicy_shouldSucceed() throws IOException {
+            // first add another policy
+            // Note: PATH_EXAMPLE_2 seems to fail with HTTP 400 message: "var public_servers is unsafe"
+            // - is this a problem with the examples ?
+            opaClient.upsertPolicy("example2", loadResourceAsString(PATH_EXAMPLE_1)).join();
+
+            // fetch it first
+            var upsertResponse = opaClient.getPolicy("example2").join();
+            assertThat(upsertResponse.getResult()).isNotNull();
+
+            // now delete it again
+            var deleteResponse = opaClient.deletePolicy("example2").join();
+            assertThat(deleteResponse).isNotNull();
+
+            // check that a GET gives an error
+            assertThatExceptionOfType(CompletionException.class)
+                    .isThrownBy(() -> opaClient.getPolicy("example2").join())
+                    .havingCause()
+                    .isInstanceOfSatisfying(HttpStatusException.class, httpStatusEx -> {
+                        assertThat(httpStatusEx.statusCode()).isEqualTo(404);
+                    });
+        }
+
+        @Test
+        @Order(3)
         void listPolicy() throws ExecutionException, InterruptedException {
             ListPoliciesResponse response = opaClient.listPolicies().get();
 
             assertThat(response).isNotNull();
-            assertThat(response.getResult()).isEmpty();
+            assertThat(response.getResult()).hasSize(1);
         }
     }
-
-    public static class DataObject extends HashMap<String, Object> {
-
-    }
-
-    ;
 
     @Nested
     class Scenarios {
@@ -85,7 +138,7 @@ class OpaClientIntegrationTests {
             opaClient.upsertData("/", Map.of("pi", 3.14D)).get();
 
             // fetch it again
-            var data = opaClient.getData("/", GetDocumentResponse.class).get();
+            var data = opaClient.getData("/", GetDocumentResponse.class).join();
             assertThat(data.getResult())
                     .isNotNull()
                     .hasFieldOrPropertyWithValue("pi", 3.14D);
@@ -104,30 +157,23 @@ class OpaClientIntegrationTests {
                     .satisfies(query -> assertThat(query)
                             .singleElement() // 1 expression
                             .satisfies(expr -> assertThat(expr.getTerms()).satisfies(terms -> {
-                                assertThat(terms).first()
-                                        .isInstanceOf(Ref.class)
-                                        .hasFieldOrPropertyWithValue("value", List.of(new Var("gte")));
-                                assertThat(terms).element(1)
-                                        .isInstanceOfSatisfying(Call.class, call -> {
-                                            assertThat(call.getValue()).first()
-                                                    .isInstanceOf(Ref.class)
-                                                    .hasFieldOrPropertyWithValue("value", List.of(new Var("mul")));
-                                            // call
-                                            //  ref var mul
-                                            //  number
-                                            //  ref
-                                            //      var(input)
-                                            //      string(radius)
-
-                                        });
-
-                                assertThat(terms).last()
-                                        .isInstanceOf(NumberValue.class)
-                                        .hasFieldOrPropertyWithValue("value", 4L);
-
+                                assertThat(terms).hasSize(3);
+                                // 1: gte
+                                // 2: call(mul, call(mul, 3.14, input.radius), 2)
+                                // 3: 4
                             })));
         }
 
+    }
+
+    private static String loadResourceAsString(String resourcePath) {
+        try {
+            return new String(
+                    Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(resourcePath)).readAllBytes(),
+                    StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
 }
