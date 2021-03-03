@@ -1,0 +1,57 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+        }
+
+        all {
+            pom {
+                url = 'https://github.com/xenit-eu/opa-async-java-client'
+                name = "opa-async-java-client"
+                description = project.description
+
+                scm {
+                    connection = 'scm:git:git@github.com:xenit-eu/opa-async-java-client.git'
+                    developerConnection = 'scm:git:git@github.com:xenit-eu/opa-async-java-client.git'
+                    url = 'https://github.com/xenit-eu/opa-async-java-client.git'
+                }
+
+                developers {
+                    developer {
+                        id = "xenit"
+                        name = "Xenit Solutions NV"
+                    }
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = version.toString().endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            credentials {
+                username = project.findProperty('sonatype_username')
+                password = project.findProperty('sonatype_password')
+            }
+        }
+    }
+}
+
+signing {
+    required { !version.toString().endsWith("SNAPSHOT") }
+    useInMemoryPgpKeys(findProperty("signingKeyId"), findProperty("signingKey"), findProperty("signingPassword"))
+    sign publishing.publications
+}

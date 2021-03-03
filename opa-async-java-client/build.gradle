@@ -2,9 +2,7 @@ plugins {
     id 'java-library'
 }
 
-repositories {
-    mavenCentral()
-}
+apply from: "${rootDir}/gradle/publish.gradle"
 
 dependencies {
     api "org.slf4j:slf4j-api:${slf4jVersion}"
