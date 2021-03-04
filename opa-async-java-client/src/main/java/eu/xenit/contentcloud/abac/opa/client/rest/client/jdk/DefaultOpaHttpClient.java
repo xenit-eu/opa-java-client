@@ -1,7 +1,7 @@
 package eu.xenit.contentcloud.abac.opa.client.rest.client.jdk;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.xenit.contentcloud.abac.opa.client.rest.OpaRestClient;
+import eu.xenit.contentcloud.abac.opa.client.rest.OpaHttpClient;
 import eu.xenit.contentcloud.abac.opa.client.rest.client.jdk.converter.JacksonBodyConverter;
 import eu.xenit.contentcloud.abac.opa.client.rest.http.HttpMethod;
 import eu.xenit.contentcloud.abac.opa.client.rest.http.HttpRequestHeaders;
@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultOpaRestClient implements OpaRestClient {
+public class DefaultOpaHttpClient implements OpaHttpClient {
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -40,7 +40,7 @@ public class DefaultOpaRestClient implements OpaRestClient {
     private static final String HEADER_ACCEPT = "Accept";
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
 
-    public DefaultOpaRestClient(HttpClient httpClient, ObjectMapper objectMapper) {
+    public DefaultOpaHttpClient(HttpClient httpClient, ObjectMapper objectMapper) {
         this.httpClient = httpClient;
         this.objectMapper = objectMapper;
 

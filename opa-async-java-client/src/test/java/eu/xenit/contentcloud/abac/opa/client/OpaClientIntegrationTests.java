@@ -42,7 +42,7 @@ class OpaClientIntegrationTests {
             .withExposedPorts(OPA_EXPOSED_PORT)
             .waitingFor(Wait.forHttp("/"));
 
-    private final ReactiveOpaClient opaClient = ReactiveOpaClient.builder()
+    private final OpaClient opaClient = OpaClient.builder()
             .url("http://" + opaContainer.getHost() + ":" + opaContainer.getMappedPort(OPA_EXPOSED_PORT))
             .build();
 

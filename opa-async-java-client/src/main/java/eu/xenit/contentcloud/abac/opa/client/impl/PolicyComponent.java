@@ -1,7 +1,7 @@
 package eu.xenit.contentcloud.abac.opa.client.impl;
 
 import eu.xenit.contentcloud.abac.opa.client.api.PolicyApi;
-import eu.xenit.contentcloud.abac.opa.client.rest.OpaRestClient;
+import eu.xenit.contentcloud.abac.opa.client.rest.OpaHttpClient;
 import eu.xenit.contentcloud.abac.opa.client.rest.http.MediaType;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ public class PolicyComponent implements PolicyApi {
 
     private static final String POLICY_ENDPOINT = "/v1/policies";
 
-    private final OpaRestClient restClient;
+    private final OpaHttpClient restClient;
 
     @Override
     public CompletableFuture<ListPoliciesResponse> listPolicies() {

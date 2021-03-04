@@ -4,7 +4,7 @@ import eu.xenit.contentcloud.abac.opa.client.rest.http.HttpRequestHeaders;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public interface OpaRestClient {
+public interface OpaHttpClient {
 
     <TResponse> CompletableFuture<TResponse> get(String path,
             Consumer<HttpRequestHeaders> headersCallback, Class<TResponse> responseType);
@@ -43,7 +43,5 @@ public interface OpaRestClient {
     }
 
     void configure(Consumer<RestClientConfiguration> callback);
-
-
 
 }
