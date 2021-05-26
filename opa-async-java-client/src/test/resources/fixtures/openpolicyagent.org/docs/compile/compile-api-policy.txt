@@ -1,0 +1,9 @@
+package compile.example
+
+allow {
+  input.subject.clearance_level >= data.reports[_].clearance_level
+}
+
+allow {
+  input.break_glass == true
+}

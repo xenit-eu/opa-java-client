@@ -1,4 +1,4 @@
-rootProject.name = 'reactive-opa-java-client'
+rootProject.name = 'opa-java-client'
 
 include 'rego-java'
 include 'opa-async-java-client'
