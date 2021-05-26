@@ -51,7 +51,7 @@ publishing {
 }
 
 signing {
-    required { !version.toString().endsWith("SNAPSHOT") }
+    required { gradle.taskGraph.hasTask("publish") }
     useInMemoryPgpKeys(findProperty("signingKeyId"), findProperty("signingKey"), findProperty("signingPassword"))
     sign publishing.publications
 }
