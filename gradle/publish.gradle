@@ -9,14 +9,14 @@ publishing {
 
         all {
             pom {
-                url = 'https://github.com/xenit-eu/opa-async-java-client'
-                name = "opa-async-java-client"
+                url = 'https://github.com/content-cloud/opa-java-client'
+                name = "opa-java-client"
                 description = project.description
 
                 scm {
-                    connection = 'scm:git:git@github.com:xenit-eu/opa-async-java-client.git'
-                    developerConnection = 'scm:git:git@github.com:xenit-eu/opa-async-java-client.git'
-                    url = 'https://github.com/xenit-eu/opa-async-java-client.git'
+                    connection = 'scm:git:git@github.com:content-cloud/opa-java-client.git'
+                    developerConnection = 'scm:git:git@github.com:content-cloud/opa-java-client.git'
+                    url = 'https://github.com/content-cloud/opa-java-client.git'
                 }
 
                 developers {
