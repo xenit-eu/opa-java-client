@@ -36,22 +36,22 @@ publishing {
         }
     }
 
-    repositories {
-        maven {
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.toString().endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
-            credentials {
-                username = project.findProperty('sonatype_username')
-                password = project.findProperty('sonatype_password')
+    repositories {
+        if (version.version.isSignificant()) {
+            sonatypeMavenCentral {
+                credentials {
+                    username = project.findProperty('sonatype_username')
+                    password = project.findProperty('sonatype_password')
+                }
+            }
+        } else {
+            sonatypeSnapshots {
+                credentials {
+                    username = project.findProperty('sonatype_username')
+                    password = project.findProperty('sonatype_password')
+                }
             }
         }
     }
-}
-
-signing {
-    required { gradle.taskGraph.hasTask("publish") }
-    useInMemoryPgpKeys(findProperty("signingKeyId"), findProperty("signingKey"), findProperty("signingPassword"))
-    sign publishing.publications
 }
