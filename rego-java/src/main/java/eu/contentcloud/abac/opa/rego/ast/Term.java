@@ -8,12 +8,14 @@ import eu.contentcloud.abac.opa.rego.ast.Term.Bool;
 import eu.contentcloud.abac.opa.rego.ast.Term.Null;
 import eu.contentcloud.abac.opa.rego.ast.Term.Numeric;
 import eu.contentcloud.abac.opa.rego.ast.Term.Text;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -150,13 +152,22 @@ public abstract class Term implements Node {
 
     }
 
-    @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Numeric extends ScalarTerm<Number> {
+    public static class Numeric extends ScalarTerm<BigDecimal> {
 
-        Number value;
+        @Getter
+        BigDecimal value;
+
+        public Numeric(long number) {
+            this(BigDecimal.valueOf(number));
+        }
+
+        public Numeric(double number) {
+            this(BigDecimal.valueOf(number));
+        }
+
 
         @Override
         public <T> T accept(RegoVisitor<T> visitor) {
