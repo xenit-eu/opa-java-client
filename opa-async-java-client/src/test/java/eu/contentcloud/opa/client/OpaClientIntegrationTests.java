@@ -5,6 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.InstanceOfAssertFactories.MAP;
 
 import eu.contentcloud.abac.opa.rego.ast.AbstractSyntaxTree;
+import eu.contentcloud.abac.opa.rego.ast.Expression;
+import eu.contentcloud.abac.opa.rego.ast.Query;
+import eu.contentcloud.abac.opa.rego.ast.QuerySet;
+import eu.contentcloud.abac.opa.rego.ast.Term;
+import eu.contentcloud.abac.opa.rego.ast.Term.Ref;
 import eu.contentcloud.opa.client.api.CompileApi;
 import eu.contentcloud.opa.client.api.CompileApi.PartialEvaluationRequest;
 import eu.contentcloud.opa.client.api.DataApi;
@@ -312,8 +317,9 @@ class OpaClientIntegrationTests {
         /**
          * Scenario for partial evaluation of a policy, based on 'group' attribute on a set of documents/results
          *
-         * Context: 1. A user is member of a set of groups, expressed via an array as `input.user.groups[]` 2. Documents
-         * have a (single) `group` attribute.
+         * Context:
+         * 1. A user is member of a set of groups, expressed via an array as `input.user.groups[]`
+         * 2. Documents have a (single) `group` attribute.
          *
          * Policy: A user can access a document, when the document has a `group` attribute that matches with a group
          * from his users' profile.
@@ -327,25 +333,33 @@ class OpaClientIntegrationTests {
                     "data.test.allow == true",
                     Map.of("method", "GET",
                             "path", List.of("api", "documents"),
-                            "user", Map.of("group", List.of("my-group"))
+                            "user", Map.of("group", List.of("group-a", "group-b"))
                     ),
                     List.of("data.documents")
             ).join();
+
             assertThat(result).isNotNull();
             assertThat(result.getResult()).isNotNull();
-            assertThat(result.getResult().getQueries())
-                    .singleElement()
-                    .satisfies(query -> Assertions.assertThat(query)
-                            .singleElement()
-                            .satisfies(expr -> {
-                                assertThat(expr.getIndex()).isEqualTo(0);
-                                var terms = expr.getTerms();
-                                assertThat(terms).hasSize(3);
-                                assertThat(terms.get(0).toString()).isEqualTo("eq");
-                                assertThat(terms.get(1).toString()).isEqualTo("\"my-group\"");
-                                assertThat(terms.get(2).toString())
-                                        .isEqualTo("data[\"documents\"][$11][\"group\"]");
-                            }));
+            assertThat(result.getResult().getQueries()).containsExactly(
+                    new Query(new Expression(0, List.of(
+                            new Ref(List.of(new Term.Var("eq"))),
+                            new Term.Text("group-a"),
+                            new Ref(List.of(
+                                    new Term.Var("data"),
+                                    new Term.Text("documents"),
+                                    new Term.Var("$11"),
+                                    new Term.Text("group")))
+
+                    ))), new Query(new Expression(0, List.of(
+                            new Ref(List.of(new Term.Var("eq"))),
+                            new Term.Text("group-b"),
+                            new Ref(List.of(
+                                    new Term.Var("data"),
+                                    new Term.Text("documents"),
+                                    new Term.Var("$11"),
+                                    new Term.Text("group")))
+                    ))));
+
         }
 
         /**

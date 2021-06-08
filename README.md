@@ -1,4 +1,4 @@
-# opa-async-java-client
+# opa-java-client
 ![build](https://github.com/content-cloud/opa-java-client/workflows/build/badge.svg?branch=main)
 
 An asynchronous java client library for the [OpenPolicyAgent](https://www.openpolicyagent.org/) [REST API](https://www.openpolicyagent.org/docs/latest/rest-api/).

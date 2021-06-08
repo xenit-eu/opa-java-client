@@ -12,6 +12,10 @@ public class Expression implements Node {
     long index;
     List<? extends Term> terms;
 
+    public Expression(long index, Term ... terms) {
+        this(index, List.of(terms));
+    }
+
     @Override
     public <T> T accept(RegoVisitor<T> visitor) {
         return visitor.visit(this);

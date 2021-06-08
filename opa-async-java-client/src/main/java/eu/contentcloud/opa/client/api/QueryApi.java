@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 public interface QueryApi {
 
@@ -15,6 +16,7 @@ public interface QueryApi {
     }
 
     @Data
+    @EqualsAndHashCode(callSuper = true)
     class QueryResultEntry extends HashMap<String, Object> {
 
     }
