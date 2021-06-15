@@ -10,6 +10,7 @@ import eu.contentcloud.opa.client.impl.DataComponent;
 import eu.contentcloud.opa.client.impl.PolicyComponent;
 import eu.contentcloud.opa.client.impl.QueryComponent;
 import eu.contentcloud.opa.client.rest.OpaHttpClient;
+import eu.contentcloud.opa.client.rest.RestClientConfiguration;
 import eu.contentcloud.opa.client.rest.RestClientConfiguration.LogSpecification;
 import eu.contentcloud.opa.client.rest.client.jdk.DefaultOpaHttpClient;
 import java.net.http.HttpClient;
@@ -17,6 +18,7 @@ import java.net.http.HttpClient.Redirect;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 
 public class OpaClient implements PolicyApi, QueryApi, DataApi, CompileApi {
@@ -99,6 +101,8 @@ public class OpaClient implements PolicyApi, QueryApi, DataApi, CompileApi {
                 HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).followRedirects(Redirect.NORMAL).build(),
                 new ObjectMapper());
 
+        private Consumer<LogSpecification> httpLogSpec = LogSpecification::verbose;
+
         /**
          * @param url URL including protocol and port
          */
@@ -111,6 +115,12 @@ public class OpaClient implements PolicyApi, QueryApi, DataApi, CompileApi {
         public Builder restClient(OpaHttpClient restClient) {
             Objects.requireNonNull(restClient);
             this.restClient = restClient;
+            return this;
+        }
+
+        public Builder httpLogging(Consumer<LogSpecification> httpLogSpec) {
+            Objects.requireNonNull(httpLogSpec);
+            this.httpLogSpec = httpLogSpec;
             return this;
         }
 
@@ -132,7 +142,7 @@ public class OpaClient implements PolicyApi, QueryApi, DataApi, CompileApi {
             // configure the provided client
             client.configure(config -> config
                     .baseUrl(this.url)
-                    .logging(LogSpecification::verbose));
+                    .logging(this.httpLogSpec));
 
             return client;
         }
