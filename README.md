@@ -24,14 +24,14 @@ interface.
 Using Gradle:
 
 ```groovy
-implementation "eu.xenit.contentcloud.thunx:opa-async-java-client:${version}"
+implementation "eu.xenit.contentcloud:opa-async-java-client:${version}"
 ```
 
 Using Maven:
 
 ```xml
 <dependency>
-    <groupId>eu.xenit.contentcloud.thunx</groupId>
+    <groupId>eu.xenit.contentcloud</groupId>
     <artifactId>opa-async-java-client</artifactId>
     <version>${version}</version>
 </dependency>

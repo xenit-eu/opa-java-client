@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.2.0 - 2021-07-20
 
 Changed:
-* Moved maven group coordinates to `eu.xenit.contentcloud.thunx`
+* Moved maven group coordinates to `eu.xenit.contentcloud`
 * Change OPA term `Numeric` parameterized type from `Number` to `BigDecimal`
 * Make http-log-spec configurable from `OpaClient.Builder`
 
