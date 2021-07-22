@@ -1,5 +1,8 @@
-# opa-java-client
-![build](https://github.com/content-cloud/opa-java-client/workflows/build/badge.svg?branch=main)
+# OpenPolicyAgent Java Client
+
+![Build](https://github.com/content-cloud/opa-java-client/workflows/build/badge.svg?branch=main)
+![Maven Central](https://img.shields.io/maven-central/v/eu.xenit.contentcloud/opa-async-java-client?color=blue)
+![License](https://img.shields.io/github/license/xenit-eu/opa-java-client?color=blue)
 
 An asynchronous java client library for the [OpenPolicyAgent](https://www.openpolicyagent.org/) [REST API](https://www.openpolicyagent.org/docs/latest/rest-api/).
 
