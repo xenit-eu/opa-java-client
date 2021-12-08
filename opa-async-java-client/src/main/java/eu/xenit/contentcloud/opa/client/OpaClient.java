@@ -1,10 +1,12 @@
 package eu.xenit.contentcloud.opa.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.xenit.contentcloud.opa.client.api.CompileApi;
 import eu.xenit.contentcloud.opa.client.api.DataApi;
-import eu.xenit.contentcloud.opa.client.api.QueryApi;
 import eu.xenit.contentcloud.opa.client.api.PolicyApi;
+import eu.xenit.contentcloud.opa.client.api.QueryApi;
 import eu.xenit.contentcloud.opa.client.impl.CompileComponent;
 import eu.xenit.contentcloud.opa.client.impl.DataComponent;
 import eu.xenit.contentcloud.opa.client.impl.PolicyComponent;
@@ -48,7 +50,7 @@ public class OpaClient implements PolicyApi, QueryApi, DataApi, CompileApi {
 
     @Override
     public CompletableFuture<ListPoliciesResponse> listPolicies() {
-         return this.policyComponent.listPolicies();
+        return this.policyComponent.listPolicies();
     }
 
     @Override
@@ -97,8 +99,14 @@ public class OpaClient implements PolicyApi, QueryApi, DataApi, CompileApi {
          * The default rest-client
          */
         private OpaHttpClient restClient = new DefaultOpaHttpClient(
-                HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).followRedirects(Redirect.NORMAL).build(),
-                new ObjectMapper());
+                HttpClient.newBuilder()
+                        .connectTimeout(Duration.ofSeconds(5))
+                        .followRedirects(Redirect.NORMAL)
+                        .build(),
+                JsonMapper.builder()
+                        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                        .build()
+                        .registerModule(new JavaTimeModule()));
 
         private Consumer<LogSpecification> httpLogSpec = LogSpecification::verbose;
 
