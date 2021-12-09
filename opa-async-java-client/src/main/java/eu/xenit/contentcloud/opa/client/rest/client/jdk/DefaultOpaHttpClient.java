@@ -3,9 +3,9 @@ package eu.xenit.contentcloud.opa.client.rest.client.jdk;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.xenit.contentcloud.opa.client.rest.OpaHttpClient;
 import eu.xenit.contentcloud.opa.client.rest.RestClientConfiguration;
+import eu.xenit.contentcloud.opa.client.rest.client.jdk.converter.ConverterProcessor;
 import eu.xenit.contentcloud.opa.client.rest.client.jdk.converter.HttpBodyConverter.DeserializationContext;
 import eu.xenit.contentcloud.opa.client.rest.client.jdk.converter.HttpBodyConverter.SerializationContext;
-import eu.xenit.contentcloud.opa.client.rest.client.jdk.converter.ConverterProcessor;
 import eu.xenit.contentcloud.opa.client.rest.client.jdk.converter.JacksonBodyConverter;
 import eu.xenit.contentcloud.opa.client.rest.client.jdk.converter.StringConverter;
 import eu.xenit.contentcloud.opa.client.rest.http.HttpMethod;
@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultOpaHttpClient implements OpaHttpClient {
 
     private final HttpClient httpClient;
-    private final ObjectMapper objectMapper;
     private final ConverterProcessor converterProcessor;
 
     private URI baseUrl;
@@ -42,11 +41,10 @@ public class DefaultOpaHttpClient implements OpaHttpClient {
 
     public DefaultOpaHttpClient(HttpClient httpClient, ObjectMapper objectMapper) {
         this.httpClient = httpClient;
-        this.objectMapper = objectMapper;
 
         this.converterProcessor = new ConverterProcessor(List.of(
                 new StringConverter(),
-                new JacksonBodyConverter()
+                new JacksonBodyConverter(objectMapper)
         ));
     }
 
@@ -88,7 +86,6 @@ public class DefaultOpaHttpClient implements OpaHttpClient {
 
         callback.accept(config);
     }
-
 
 
     private <TRequest, TResponse> CompletableFuture<TResponse> execute(
@@ -134,8 +131,6 @@ public class DefaultOpaHttpClient implements OpaHttpClient {
                     return this.converterProcessor.read(context, responseType);
                 });
     }
-
-
 
 
     private void handleStatusCode(HttpResponse<byte[]> response, Throwable exception) {
