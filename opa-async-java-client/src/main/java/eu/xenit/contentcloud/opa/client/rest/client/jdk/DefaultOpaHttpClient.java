@@ -27,7 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultOpaHttpClient implements OpaHttpClient {
 
     private final HttpClient httpClient;
-    private final ConverterProcessor converterProcessor;
+
+    final ConverterProcessor converterProcessor;
 
     private URI baseUrl;
     private RequestLogger logger;

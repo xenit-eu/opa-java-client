@@ -143,7 +143,7 @@ public class OpaClient implements PolicyApi, QueryApi, DataApi, CompileApi {
 
         }
 
-        private OpaHttpClient getOrCreateDefaultHttpClient() {
+        protected OpaHttpClient getOrCreateDefaultHttpClient() {
             var client = this.restClient;
 
             // configure the provided client
