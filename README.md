@@ -1,7 +1,7 @@
 # OpenPolicyAgent Java Client
 
-[![Build](https://github.com/content-cloud/opa-java-client/workflows/build/badge.svg?branch=main)](https://github.com/xenit-eu/opa-java-client/actions/workflows/ci.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/eu.xenit.contentcloud/opa-async-java-client?color=blue)](https://search.maven.org/search?q=a:opa-async-java-client%20g:eu.xenit.contentcloud)
+[![Build](https://github.com/xenit-eu/opa-java-client/workflows/build/badge.svg?branch=main)](https://github.com/xenit-eu/opa-java-client/actions/workflows/ci.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/com.contentgrid.opa-java-client/opa-async-java-client?color=blue)](https://search.maven.org/search?q=a:opa-async-java-client%20g:com.contentgrid.opa-java-client)
 [![License](https://img.shields.io/github/license/xenit-eu/opa-java-client?color=blue)](LICENSE)
 
 An asynchronous java client library for the [OpenPolicyAgent](https://www.openpolicyagent.org/) [REST API](https://www.openpolicyagent.org/docs/latest/rest-api/).
@@ -17,7 +17,7 @@ The design of the project is borrowed from [Bisnode/opa-java-client](https://git
 uses an async programming model instead, which makes it suitable to be used in a reactive application stack.
 
 This client library uses the JDK11+ HttpClient by default, but allows you to plug in your own http-client by providing
-an implementation for the [OpaRestClient](https://github.com/xenit-eu/opa-async-java-client/blob/main/opa-async-java-client/src/main/java/eu/xenit/contentcloud/abac/opa/client/rest/OpaRestClient.java)
+an implementation for the [OpaRestClient](https://github.com/xenit-eu/opa-async-java-client/blob/main/opa-async-java-client/src/main/java/com/contentgrid/opa/client/rest/OpaHttpClient.java)
 interface. 
 
 ## Installation
@@ -27,14 +27,14 @@ interface.
 Using Gradle:
 
 ```groovy
-implementation "eu.xenit.contentcloud:opa-async-java-client:${version}"
+implementation "com.contentgrid.opa-java-client:opa-async-java-client:${version}"
 ```
 
 Using Maven:
 
 ```xml
 <dependency>
-    <groupId>eu.xenit.contentcloud</groupId>
+    <groupId>com.contentgrid.opa-java-client</groupId>
     <artifactId>opa-async-java-client</artifactId>
     <version>${version}</version>
 </dependency>
