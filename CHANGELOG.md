@@ -7,15 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.4.0 - 2022-10-04
 
-Fixed:
-* [#9] - Fixed release to Maven Central via Sonatype
-
 Changed:
 * [#8] - Moved packages to `com.contentgrid.opa`
 * [#7] - Moved maven group coordinates to `com.contentgrid.opa-java-client`
 
 Housekeeping:
-* [#6] - Updated Gradle to 7.5.1 
+* [#9] - Fixed release to Maven Central via Sonatype
+* [#6] - Updated Gradle to 7.5.1
 * [#6] - Updated dependencies to Spring Boot 2.6.12 baseline
 
 [#6]: https://github.com/xenit-eu/opa-java-client/pull/6
