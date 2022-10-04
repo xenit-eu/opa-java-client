@@ -22,7 +22,7 @@ nexusPublishing {
 
 allprojects {
     pluginManager.withPlugin('maven-publish') {
-         apply from: "${rootDir}/gradle/publish.gradle"
+        apply from: "${rootDir}/gradle/publish.gradle"
     }
     pluginManager.withPlugin('java') {
         java {
