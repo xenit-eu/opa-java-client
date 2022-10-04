@@ -1,4 +1,4 @@
-apply plugin: 'maven-publish'
+apply plugin: 'eu.xenit.enterprise-conventions.ext.signing'
 apply plugin: 'signing'
 
 publishing {
