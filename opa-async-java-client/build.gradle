@@ -5,11 +5,13 @@ plugins {
 apply from: "${rootDir}/gradle/publish.gradle"
 
 dependencies {
-    api "org.slf4j:slf4j-api:${slf4jVersion}"
+    api platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+
+    api "org.slf4j:slf4j-api"
     api project(":rego-java")
 
-    api "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+    api "com.fasterxml.jackson.core:jackson-databind"
+    api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
@@ -18,12 +20,12 @@ dependencies {
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     testImplementation "org.testcontainers:junit-jupiter:${testContainersVersion}"
-    testImplementation "org.assertj:assertj-core:${assertjVersion}"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.assertj:assertj-core"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
 
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
-    testRuntimeOnly "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    testRuntimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testRuntimeOnly "com.fasterxml.jackson.core:jackson-databind"
+    testRuntimeOnly "org.slf4j:slf4j-simple"
 
 }
 

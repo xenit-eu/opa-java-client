@@ -5,8 +5,10 @@ plugins {
 apply from: "${rootDir}/gradle/publish.gradle"
 
 dependencies {
+    api platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
 }
