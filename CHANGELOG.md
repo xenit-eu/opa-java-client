@@ -12,6 +12,7 @@ Changed:
 * [#7] - Moved maven group coordinates to `com.contentgrid.opa-java-client`
 
 Housekeeping:
+* [#10] - Resolved conflict with `gradle-nexus.publish-plugin` and `xenit-enterprise-conventions` plugins
 * [#9] - Fixed release to Maven Central via Sonatype
 * [#6] - Updated Gradle to 7.5.1
 * [#6] - Updated dependencies to Spring Boot 2.6.12 baseline
@@ -20,6 +21,7 @@ Housekeeping:
 [#7]: https://github.com/xenit-eu/opa-java-client/pull/7
 [#8]: https://github.com/xenit-eu/opa-java-client/pull/8
 [#9]: https://github.com/xenit-eu/opa-java-client/pull/9
+[#10]: https://github.com/xenit-eu/opa-java-client/pull/10
 
 ## 0.3.0 - 2021-12-09
 
