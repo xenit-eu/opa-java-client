@@ -1,6 +1,7 @@
 package com.contentgrid.opa.rego.ast;
 
 import com.contentgrid.opa.rego.ast.Term.ArrayTerm;
+import com.contentgrid.opa.rego.ast.Term.SetTerm;
 import com.contentgrid.opa.rego.ast.Term.Call;
 import com.contentgrid.opa.rego.ast.Term.Ref;
 import com.contentgrid.opa.rego.ast.Term.Bool;
@@ -24,4 +25,5 @@ public interface RegoVisitor<T> {
 
 
     T visit(ArrayTerm arrayTerm);
+    T visit(SetTerm setTerm);
 }
