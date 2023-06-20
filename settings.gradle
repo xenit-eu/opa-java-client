@@ -1,5 +1,5 @@
 plugins {
-    id "eu.xenit.enterprise-conventions.ext.signing" version "0.4.0" apply false
+    id 'eu.xenit.enterprise-conventions.oss' version '0.4.0'
     id 'org.ajoberstar.reckon.settings' version '0.18.0'
 }
 
