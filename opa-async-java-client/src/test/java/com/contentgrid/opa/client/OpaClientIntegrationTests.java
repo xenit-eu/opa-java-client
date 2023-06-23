@@ -304,6 +304,28 @@ class OpaClientIntegrationTests {
                     // assert one (1) empty query, because the query can be satisfied without any further evaluation
                     .anySatisfy(query -> assertThat(query).isEmpty());
         }
+
+        @Test
+        void example_set() {
+            opaClient.upsertPolicy("compile-example", loadResourceAsString(POLICY_PATH)).join();
+
+            var request = new PartialEvaluationRequest(
+                    "data.compile.example.test_set_in == true",
+                    null,
+                    List.of("input.entity"));
+
+            var result = opaClient.compile(request).join();
+            assertThat(result).isNotNull();
+            assertThat(result.getResult()).isNotNull();
+            assertThat(result.getResult().getQueries()).isNotNull().hasSize(1);
+            Query query = result.getResult().getQueries().get(0);
+            assertThat(query).isNotNull().hasSize(1);
+            Expression expression = query.get(0);
+            assertThat(expression.getTerms()).isNotNull().hasSize(3);
+            assertThat(expression.getTerms().get(0)).hasToString("internal[\"member_2\"]");
+            assertThat(expression.getTerms().get(1)).hasToString("input[\"entity\"][\"number\"]");
+            assertThat(expression.getTerms().get(2)).hasToString("Term.SetTerm(value=[\"one\", \"two\", \"three\"])");
+        }
     }
 
     @Nested
