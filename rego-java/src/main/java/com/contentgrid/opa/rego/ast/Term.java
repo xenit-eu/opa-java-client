@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.contentgrid.opa.rego.ast.Term.ArrayTerm;
+import com.contentgrid.opa.rego.ast.Term.SetTerm;
 import com.contentgrid.opa.rego.ast.Term.Bool;
 import com.contentgrid.opa.rego.ast.Term.Null;
 import com.contentgrid.opa.rego.ast.Term.Numeric;
@@ -11,6 +12,7 @@ import com.contentgrid.opa.rego.ast.Term.Text;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +32,8 @@ import lombok.NoArgsConstructor;
         @Type(value = Text.class, name = "string"),
         @Type(value = Bool.class, name = "boolean"),
         @Type(value = Null.class, name = "null"),
-        @Type(value = ArrayTerm.class, name = "array")
+        @Type(value = ArrayTerm.class, name = "array"),
+        @Type(value = SetTerm.class, name = "set")
 })
 public abstract class Term implements Node {
 
@@ -96,6 +99,20 @@ public abstract class Term implements Node {
     @EqualsAndHashCode(callSuper = true)
     public static class ArrayTerm extends Term {
 
+        List<ScalarTerm<Object>> value;
+
+        @Override
+        public <T> T accept(RegoVisitor<T> visitor) {
+            return visitor.visit(this);
+        }
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class SetTerm extends Term {
+
+        Set<ScalarTerm<Object>> value;
+
         @Override
         public <T> T accept(RegoVisitor<T> visitor) {
             return visitor.visit(this);
@@ -106,7 +123,7 @@ public abstract class Term implements Node {
     @EqualsAndHashCode(callSuper = true)
     public static abstract class ScalarTerm<T> extends Term {
 
-        protected abstract T getValue();
+        public abstract T getValue();
 
     }
 
@@ -195,7 +212,7 @@ public abstract class Term implements Node {
         }
 
         @Override
-        protected Void getValue() {
+        public Void getValue() {
             return null;
         }
     }
