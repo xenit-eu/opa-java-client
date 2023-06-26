@@ -96,10 +96,12 @@ public abstract class Term implements Node {
 
 
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     @EqualsAndHashCode(callSuper = true)
     public static class ArrayTerm extends Term {
 
-        List<ScalarTerm<Object>> value;
+        List<ScalarTerm<?>> value;
 
         @Override
         public <T> T accept(RegoVisitor<T> visitor) {
@@ -108,10 +110,12 @@ public abstract class Term implements Node {
     }
 
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     @EqualsAndHashCode(callSuper = true)
     public static class SetTerm extends Term {
 
-        Set<ScalarTerm<Object>> value;
+        Set<ScalarTerm<?>> value;
 
         @Override
         public <T> T accept(RegoVisitor<T> visitor) {
