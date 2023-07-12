@@ -99,7 +99,7 @@ public abstract class Term implements Node {
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode(callSuper = true)
-    public static class ArrayTerm extends Term {
+    public static class ArrayTerm extends ScalarTerm<List<ScalarTerm<?>>> {
 
         List<ScalarTerm<?>> value;
 
@@ -113,7 +113,7 @@ public abstract class Term implements Node {
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode(callSuper = true)
-    public static class SetTerm extends Term {
+    public static class SetTerm extends ScalarTerm<Set<ScalarTerm<?>>> {
 
         Set<ScalarTerm<?>> value;
 
