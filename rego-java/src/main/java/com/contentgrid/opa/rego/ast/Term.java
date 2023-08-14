@@ -113,9 +113,9 @@ public abstract class Term implements Node {
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode(callSuper = true)
-    public static class SetTerm extends ScalarTerm<Set<ScalarTerm<?>>> {
+    public static class SetTerm extends Term {
 
-        Set<ScalarTerm<?>> value;
+        Set<Term> value;
 
         @Override
         public <T> T accept(RegoVisitor<T> visitor) {
