@@ -99,9 +99,9 @@ public abstract class Term implements Node {
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode(callSuper = true)
-    public static class ArrayTerm extends ScalarTerm<List<ScalarTerm<?>>> {
+    public static class ArrayTerm extends Term {
 
-        List<ScalarTerm<?>> value;
+        List<Term> value;
 
         @Override
         public <T> T accept(RegoVisitor<T> visitor) {
