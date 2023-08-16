@@ -101,7 +101,7 @@ public abstract class Term implements Node {
     @EqualsAndHashCode(callSuper = true)
     public static class ArrayTerm extends Term {
 
-        List<ScalarTerm<?>> value;
+        List<Term> value;
 
         @Override
         public <T> T accept(RegoVisitor<T> visitor) {
@@ -115,7 +115,7 @@ public abstract class Term implements Node {
     @EqualsAndHashCode(callSuper = true)
     public static class SetTerm extends Term {
 
-        Set<ScalarTerm<?>> value;
+        Set<Term> value;
 
         @Override
         public <T> T accept(RegoVisitor<T> visitor) {
