@@ -18,7 +18,7 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-    testImplementation "org.testcontainers:junit-jupiter:${testContainersVersion}"
+    testImplementation "org.testcontainers:junit-jupiter"
     testImplementation "org.assertj:assertj-core"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
 
