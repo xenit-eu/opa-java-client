@@ -82,7 +82,7 @@ public class DefaultOpaHttpClient implements OpaHttpClient {
     public void configure(Consumer<RestClientConfiguration> callback) {
         var config = new DefaultRestClientConfiguration(
                 uri -> this.baseUrl = uri,
-                logConfig -> this.logger = new RequestLogger(logConfig, log::info)
+                logConfig -> this.logger = new RequestLogger(logConfig, log::debug)
         );
 
         callback.accept(config);
