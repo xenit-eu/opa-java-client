@@ -25,3 +25,9 @@ jobs:
           ORG_GRADLE_PROJECT_sonatype_username: ${{ secrets.SONATYPE_S01_USERNAME }}
           ORG_GRADLE_PROJECT_sonatype_password: ${{ secrets.SONATYPE_S01_PASSWORD }}
         run: ./gradlew publish
+      - name: Upload reports
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-build
+          path: '**/build/reports'
