@@ -40,7 +40,7 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers
 class OpaClientIntegrationTests {
 
-    private static final DockerImageName OPA_IMAGE = DockerImageName.parse("openpolicyagent/opa");
+    private static final DockerImageName OPA_IMAGE = DockerImageName.parse("openpolicyagent/opa:0.70.0");
     private static final int OPA_EXPOSED_PORT = 8181;
 
     @Container
