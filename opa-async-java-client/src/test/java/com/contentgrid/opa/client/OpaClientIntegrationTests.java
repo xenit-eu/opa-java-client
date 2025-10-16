@@ -6,14 +6,14 @@ import static org.assertj.core.api.InstanceOfAssertFactories.MAP;
 
 import com.contentgrid.opa.client.api.CompileApi;
 import com.contentgrid.opa.client.api.CompileApi.PartialEvaluationRequest;
-import com.contentgrid.opa.rego.ast.Query;
-import com.contentgrid.opa.client.rest.http.HttpStatusException;
-import com.contentgrid.opa.rego.ast.Expression;
-import com.contentgrid.opa.rego.ast.Term;
-import com.contentgrid.opa.rego.ast.Term.Ref;
 import com.contentgrid.opa.client.api.DataApi;
 import com.contentgrid.opa.client.api.DataApi.GetDataResponse;
 import com.contentgrid.opa.client.api.PolicyApi.ListPoliciesResponse;
+import com.contentgrid.opa.client.rest.http.HttpStatusException;
+import com.contentgrid.opa.rego.ast.Expression;
+import com.contentgrid.opa.rego.ast.Query;
+import com.contentgrid.opa.rego.ast.Term;
+import com.contentgrid.opa.rego.ast.Term.Ref;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
@@ -322,11 +322,11 @@ class OpaClientIntegrationTests {
                                         assertThat(expr.getTerms()).hasSize(3);
                                         assertThat(expr.getTerms()).anySatisfy(
                                                 term ->  {
-                                                    assertThat(term.getClass()).isEqualTo(Ref.class);
-                                                    var ref = (Ref) term;
-                                                    assertThat(ref.getValue()).singleElement().satisfies(
-                                                            t -> assertThat(t.toString()).isEqualTo("eq")
-                                                    );
+                                                    assertThat(term).isInstanceOfSatisfying(Ref.class, ref -> {
+                                                        assertThat(ref.getValue()).singleElement().satisfies(
+                                                                t -> assertThat(t).hasToString("eq")
+                                                        );
+                                                    });
                                                 }
                                         );
                                     }));
