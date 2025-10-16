@@ -40,12 +40,12 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers
 class OpaClientIntegrationTests {
 
-    private static final DockerImageName OPA_IMAGE = DockerImageName.parse("openpolicyagent/opa:0.70.0");
+    private static final DockerImageName OPA_IMAGE = DockerImageName.parse("openpolicyagent/opa:1.9.0");
     private static final int OPA_EXPOSED_PORT = 8181;
 
     @Container
     private static final GenericContainer<?> opaContainer = new GenericContainer<>(OPA_IMAGE)
-            .withCommand(String.format("run --server --addr :%d", OPA_EXPOSED_PORT))
+            .withCommand(String.format("run --server --addr :%d --v0-compatible", OPA_EXPOSED_PORT))
             .withExposedPorts(OPA_EXPOSED_PORT)
             .waitingFor(Wait.forHttp("/"));
 
@@ -282,6 +282,54 @@ class OpaClientIntegrationTests {
                                 // 2: number:4
                                 // 3: ref:data.reports[_].clearance_level
                             })));
+        }
+
+        @Test
+        void abacExample() {
+            opaClient.upsertPolicy("abac-example", loadResourceAsString("fixtures/openpolicyagent.org/docs/compile/abac-policy.txt")).join();
+
+            var request = new PartialEvaluationRequest(
+                    "data.abac.example.allow == true",
+                    Map.of("request",
+                            Map.of("headers", Map.of("content-type", "application/json"),
+                                    "method", "GET",
+                                    "path", List.of("tests")
+                            ),
+                            "auth", Map.of(
+                                    "authenticated", true,
+                                    "principal", Map.of(
+                                            "kind", "user",
+                                            "contentgrid:att1", List.of("att1v1", "att1v2"),
+                                            "contentgrid:att2", List.of("att2v1", "att2v2")
+                                    )
+                            )
+                    ), List.of("input.entity"));
+
+            var result = opaClient.compile(request).join();
+            assertThat(result).isNotNull();
+            assertThat(result.getResult()).isNotNull();
+
+            assertThat(result.getResult().getQueries())
+                    .isNotNull()
+                    // 4 queries are generated, because there are 4 combinations of the 2 attributes in the policy
+                    .hasSize(4)
+                    .allSatisfy(
+                            query -> assertThat(query)
+                                    // There are 2 expressions per query, one for every user attribute in the policy
+                                    .hasSize(2)
+                                    .allSatisfy(expr -> {
+                                        // each expression has 3 terms (the 'eq' operator, the attribute value and the input value)
+                                        assertThat(expr.getTerms()).hasSize(3);
+                                        assertThat(expr.getTerms()).anySatisfy(
+                                                term ->  {
+                                                    assertThat(term.getClass()).isEqualTo(Ref.class);
+                                                    var ref = (Ref) term;
+                                                    assertThat(ref.getValue()).singleElement().satisfies(
+                                                            t -> assertThat(t.toString()).isEqualTo("eq")
+                                                    );
+                                                }
+                                        );
+                                    }));
         }
 
         @Test
