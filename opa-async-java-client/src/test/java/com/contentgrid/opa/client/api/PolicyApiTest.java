@@ -20,7 +20,8 @@ class PolicyApiTest {
                 .registerModule(new JavaTimeModule());
 
         // read listpoliciesresponse.json into ListPoliciesResponse
-        try (var is = getClass().getClassLoader().getResourceAsStream("com/contentgrid/opa/client/api/policyapi/listpoliciesrsponse.json")) {
+        try (var is = getClass().getClassLoader().getResourceAsStream(
+                "com/contentgrid/opa/client/api/policyapi/listpoliciesresponse.json")) {
             var response = objectMapper.readValue(is, ListPoliciesResponse.class);
             assertNotNull(response);
             assertThat(response.getResult().get(2).getAst().getRules().get(1).getBody()).singleElement().satisfies(expression -> {
