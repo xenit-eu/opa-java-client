@@ -14,6 +14,8 @@ import com.contentgrid.opa.rego.ast.Expression;
 import com.contentgrid.opa.rego.ast.Query;
 import com.contentgrid.opa.rego.ast.Term;
 import com.contentgrid.opa.rego.ast.Term.Ref;
+import com.contentgrid.opa.rego.ast.Term.Text;
+import com.contentgrid.opa.rego.ast.Term.Var;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
@@ -320,17 +322,38 @@ class OpaClientIntegrationTests {
                                     .hasSize(2)
                                     .allSatisfy(expr -> {
                                         // each expression has 3 terms (the 'eq' operator, the attribute value and the input value)
-                                        assertThat(expr.getTerms()).hasSize(3);
-                                        assertThat(expr.getTerms()).anySatisfy(
-                                                term ->  {
-                                                    assertThat(term).isInstanceOfSatisfying(Ref.class, ref -> {
-                                                        assertThat(ref.getValue()).singleElement().satisfies(
-                                                                t -> assertThat(t).hasToString("eq")
-                                                        );
-                                                    });
-                                                }
-                                        );
-                                    }));
+                                        assertThat(expr.getTerms())
+                                                .hasSize(3)
+                                                .anySatisfy(
+                                                        term -> {
+                                                            assertThat(term).isInstanceOfSatisfying(Ref.class, ref -> {
+                                                                assertThat(ref.getValue()).singleElement().satisfies(
+                                                                        t -> assertThat(t).hasToString("eq")
+                                                                );
+                                                            });
+                                                        }
+                                                );
+                                    })
+                    )
+                    .anySatisfy(query -> {
+                        assertThat(query).anySatisfy(
+                                expr -> assertThat(expr.getTerms())
+                                        .isEqualTo(List.of(
+                                                        new Ref(List.of(new Var("eq"))),
+                                                        new Text("att1v1"),
+                                                        new Ref(List.of(
+                                                                new Var("input"),
+                                                                new Text("entity"),
+                                                                new Text("a")
+                                                        )
+                                                        )
+                                                )
+
+                                        )
+                        );
+
+                    })
+            ;
         }
 
         @Test
