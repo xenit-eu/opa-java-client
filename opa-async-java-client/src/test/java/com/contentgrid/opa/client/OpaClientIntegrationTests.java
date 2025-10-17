@@ -6,14 +6,16 @@ import static org.assertj.core.api.InstanceOfAssertFactories.MAP;
 
 import com.contentgrid.opa.client.api.CompileApi;
 import com.contentgrid.opa.client.api.CompileApi.PartialEvaluationRequest;
-import com.contentgrid.opa.rego.ast.Query;
-import com.contentgrid.opa.client.rest.http.HttpStatusException;
-import com.contentgrid.opa.rego.ast.Expression;
-import com.contentgrid.opa.rego.ast.Term;
-import com.contentgrid.opa.rego.ast.Term.Ref;
 import com.contentgrid.opa.client.api.DataApi;
 import com.contentgrid.opa.client.api.DataApi.GetDataResponse;
 import com.contentgrid.opa.client.api.PolicyApi.ListPoliciesResponse;
+import com.contentgrid.opa.client.rest.http.HttpStatusException;
+import com.contentgrid.opa.rego.ast.Expression;
+import com.contentgrid.opa.rego.ast.Query;
+import com.contentgrid.opa.rego.ast.Term;
+import com.contentgrid.opa.rego.ast.Term.Ref;
+import com.contentgrid.opa.rego.ast.Term.Text;
+import com.contentgrid.opa.rego.ast.Term.Var;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
@@ -40,12 +42,12 @@ import org.testcontainers.utility.DockerImageName;
 @Testcontainers
 class OpaClientIntegrationTests {
 
-    private static final DockerImageName OPA_IMAGE = DockerImageName.parse("openpolicyagent/opa:0.70.0");
+    private static final DockerImageName OPA_IMAGE = DockerImageName.parse("openpolicyagent/opa:1.9.0");
     private static final int OPA_EXPOSED_PORT = 8181;
 
     @Container
     private static final GenericContainer<?> opaContainer = new GenericContainer<>(OPA_IMAGE)
-            .withCommand(String.format("run --server --addr :%d", OPA_EXPOSED_PORT))
+            .withCommand(String.format("run --server --addr :%d --v0-compatible", OPA_EXPOSED_PORT))
             .withExposedPorts(OPA_EXPOSED_PORT)
             .waitingFor(Wait.forHttp("/"));
 
@@ -68,8 +70,8 @@ class OpaClientIntegrationTests {
     @Nested
     class PolicyApiTests {
 
-        private static final String PATH_EXAMPLE_1 = "fixtures/openpolicyagent.org/docs/policy/policies-example-1.txt";
-        private static final String PATH_EXAMPLE_2 = "fixtures/openpolicyagent.org/docs/policy/policies-example-2.txt";
+        private static final String PATH_EXAMPLE_1 = "fixtures/openpolicyagent.org/docs/policy/policies-example-1.rego";
+        private static final String PATH_EXAMPLE_2 = "fixtures/openpolicyagent.org/docs/policy/policies-example-2.rego";
 
         @Test
         @Order(1)
@@ -195,7 +197,7 @@ class OpaClientIntegrationTests {
     @Nested
     class CompileApiTests {
 
-        public static final String POLICY_PATH = "fixtures/openpolicyagent.org/docs/compile/compile-api-policy.txt";
+        public static final String POLICY_PATH = "fixtures/openpolicyagent.org/docs/compile/compile-api-policy.rego";
 
         @Test
         void unknownInputX_largerThan0() {
@@ -285,6 +287,76 @@ class OpaClientIntegrationTests {
         }
 
         @Test
+        void abacExample() {
+            opaClient.upsertPolicy("abac-example", loadResourceAsString(
+                    "fixtures/openpolicyagent.org/docs/compile/abac-policy.rego")).join();
+
+            var request = new PartialEvaluationRequest(
+                    "data.abac.example.allow == true",
+                    Map.of("request",
+                            Map.of("headers", Map.of("content-type", "application/json"),
+                                    "method", "GET",
+                                    "path", List.of("tests")
+                            ),
+                            "auth", Map.of(
+                                    "authenticated", true,
+                                    "principal", Map.of(
+                                            "kind", "user",
+                                            "contentgrid:att1", List.of("att1v1", "att1v2"),
+                                            "contentgrid:att2", List.of("att2v1", "att2v2")
+                                    )
+                            )
+                    ), List.of("input.entity"));
+
+            var result = opaClient.compile(request).join();
+            assertThat(result).isNotNull();
+            assertThat(result.getResult()).isNotNull();
+
+            assertThat(result.getResult().getQueries())
+                    .isNotNull()
+                    // 4 queries are generated, because there are 4 combinations of the 2 attributes in the policy
+                    .hasSize(4)
+                    .allSatisfy(
+                            query -> assertThat(query)
+                                    // There are 2 expressions per query, one for every user attribute in the policy
+                                    .hasSize(2)
+                                    .allSatisfy(expr -> {
+                                        // each expression has 3 terms (the 'eq' operator, the attribute value and the input value)
+                                        assertThat(expr.getTerms())
+                                                .hasSize(3)
+                                                .anySatisfy(
+                                                        term -> {
+                                                            assertThat(term).isInstanceOfSatisfying(Ref.class, ref -> {
+                                                                assertThat(ref.getValue()).singleElement().satisfies(
+                                                                        t -> assertThat(t).hasToString("eq")
+                                                                );
+                                                            });
+                                                        }
+                                                );
+                                    })
+                    )
+                    .anySatisfy(query -> {
+                        assertThat(query).anySatisfy(
+                                expr -> assertThat(expr.getTerms())
+                                        .isEqualTo(List.of(
+                                                        new Ref(List.of(new Var("eq"))),
+                                                        new Text("att1v1"),
+                                                        new Ref(List.of(
+                                                                new Var("input"),
+                                                                new Text("entity"),
+                                                                new Text("a")
+                                                        )
+                                                        )
+                                                )
+
+                                        )
+                        );
+
+                    })
+            ;
+        }
+
+        @Test
         void example_alwaysTrue() {
             opaClient.upsertPolicy("compile-example", loadResourceAsString(POLICY_PATH)).join();
 
@@ -343,7 +415,7 @@ class OpaClientIntegrationTests {
          */
         @Test
         void partialEval_getApiDocuments() {
-            final String POLICY_PATH = "fixtures/scenarios/api-documents-policy.txt";
+            final String POLICY_PATH = "fixtures/scenarios/api-documents-policy.rego";
             opaClient.upsertPolicy("test", loadResourceAsString(POLICY_PATH)).join();
 
             var result = opaClient.compile(

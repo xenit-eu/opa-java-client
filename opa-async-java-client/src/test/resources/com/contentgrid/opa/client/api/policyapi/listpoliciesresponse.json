@@ -1,0 +1,2433 @@
+{
+  "result": [
+    {
+      "id": "test",
+      "raw": "package test\n\nallow {\n    input.method == \"GET\"\n    input.path[0] == \"api\"\n    input.path[1] == \"documents\"\n    input.user.group[_] == data.documents[_].group\n}",
+      "ast": {
+        "package": {
+          "path": [
+            {
+              "type": "var",
+              "value": "data"
+            },
+            {
+              "type": "string",
+              "value": "test"
+            }
+          ]
+        },
+        "rules": [
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "method"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "value": "GET"
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "path"
+                      },
+                      {
+                        "type": "number",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "value": "api"
+                  }
+                ]
+              },
+              {
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "path"
+                      },
+                      {
+                        "type": "number",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "value": "documents"
+                  }
+                ]
+              },
+              {
+                "index": 3,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "user"
+                      },
+                      {
+                        "type": "string",
+                        "value": "group"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$0"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "documents"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$1"
+                      },
+                      {
+                        "type": "string",
+                        "value": "group"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "allow",
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "allow"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "compile-example",
+      "raw": "package compile.example\n\nimport future.keywords.in\n\nallow {\n  input.subject.clearance_level \u003e= data.reports[_].clearance_level\n}\n\nallow {\n  input.break_glass == true\n}\n\ntest_set_in {\n    num := input.entity.number\n    num in {\"one\", \"two\", \"three\"}\n}",
+      "ast": {
+        "package": {
+          "path": [
+            {
+              "type": "var",
+              "value": "data"
+            },
+            {
+              "type": "string",
+              "value": "compile"
+            },
+            {
+              "type": "string",
+              "value": "example"
+            }
+          ]
+        },
+        "rules": [
+          {
+            "body": [
+              {
+                "generated": true,
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local31__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "subject"
+                      },
+                      {
+                        "type": "string",
+                        "value": "clearance_level"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local32__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "reports"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$0"
+                      },
+                      {
+                        "type": "string",
+                        "value": "clearance_level"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "gte"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local31__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local32__"
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "allow",
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "allow"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "break_glass"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "boolean",
+                    "value": true
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "allow",
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "allow"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local10__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "entity"
+                      },
+                      {
+                        "type": "string",
+                        "value": "number"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "internal"
+                      },
+                      {
+                        "type": "string",
+                        "value": "member_2"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local10__"
+                  },
+                  {
+                    "type": "set",
+                    "value": [
+                      {
+                        "type": "string",
+                        "value": "one"
+                      },
+                      {
+                        "type": "string",
+                        "value": "three"
+                      },
+                      {
+                        "type": "string",
+                        "value": "two"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "test_set_in",
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "test_set_in"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "abac-example",
+      "raw": "package abac.example\n\nutil.extract_content_type(header) := content_type {\n\tmime_type := trim_space(split(header, \";\")[0])\n\tcontent_type := lower(mime_type)\n}\ndefault util.content_type_in(headers, accepted_content_types) := false\n\nutil.content_type_in(headers, accepted_content_types) {\n\tcount(headers) == 1\n\textracted_mime_type := util.extract_content_type(headers[0])\n\textracted_mime_type == accepted_content_types[_]\n}\ndefault util.request.content_type_in(content_types) := false\n\nutil.request.content_type_in(content_types) {\n\tutil.content_type_in(input.request.headers[\"content-type\"], content_types)\n}\ndefault can_read_test := false\n\n# - input.entity is type 'test'\ncan_read_test {\n\tinput.auth.authenticated == true\n\tinput.auth.principal.kind == \"user\"\n\tinput.entity.a == input.auth.principal[\"contentgrid:att1\"][_]\n\tinput.entity.b == input.auth.principal[\"contentgrid:att2\"][_]\n}\n\n# End policy bprnvz6ldw4q\n# Policy nfgusztjwpba\n# - input.entity is type 'test'\ncan_read_test {\n\tinput.auth.authenticated == true\n\tinput.auth.principal.kind == \"user\"\n\tinput.auth.principal[\"contentgrid:admin\"] == true\n}\n\n# End policy nfgusztjwpba\ndefault allow := false\n\n# Static definition Application Root\nallow {\n\tinput.request.method == [\"HEAD\", \"GET\"][_]\n\t# Path /\n\tcount(input.request.path) == 0\n}\nallow {\n\tinput.request.method == [\"HEAD\", \"GET\"][_]\n\t# Path /tests\n\tcount(input.request.path) == 1\n\tinput.request.path[0] == \"tests\"\n\tcan_read_test == true\n}\nallow {\n\tinput.request.method == [\"HEAD\", \"GET\"][_]\n\t# Path /tests/{id}\n\tcount(input.request.path) == 2\n\tinput.request.path[0] == \"tests\"\n\t# variable component {id}\n\tcan_read_test == true\n}\n",
+      "ast": {
+        "package": {
+          "path": [
+            {
+              "type": "var",
+              "value": "data"
+            },
+            {
+              "type": "string",
+              "value": "abac"
+            },
+            {
+              "type": "string",
+              "value": "example"
+            }
+          ]
+        },
+        "rules": [
+          {
+            "body": [
+              {
+                "generated": true,
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "split"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local0__"
+                  },
+                  {
+                    "type": "string",
+                    "value": ";"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local14__"
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local25__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "__local14__"
+                      },
+                      {
+                        "type": "number",
+                        "value": 0
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "trim_space"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local25__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local15__"
+                  }
+                ]
+              },
+              {
+                "index": 3,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local1__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local15__"
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 4,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "lower"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local1__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local16__"
+                  }
+                ]
+              },
+              {
+                "index": 5,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local2__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local16__"
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "args": [
+                {
+                  "type": "var",
+                  "value": "__local0__"
+                }
+              ],
+              "value": {
+                "type": "var",
+                "value": "__local2__"
+              },
+              "assign": true,
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "util"
+                },
+                {
+                  "type": "string",
+                  "value": "extract_content_type"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": {
+                  "type": "boolean",
+                  "value": true
+                }
+              }
+            ],
+            "default": true,
+            "head": {
+              "args": [
+                {
+                  "type": "var",
+                  "value": "__local3__"
+                },
+                {
+                  "type": "var",
+                  "value": "__local4__"
+                }
+              ],
+              "value": {
+                "type": "boolean",
+                "value": false
+              },
+              "assign": true,
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "util"
+                },
+                {
+                  "type": "string",
+                  "value": "content_type_in"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "generated": true,
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "count"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local5__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local17__"
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local17__"
+                  },
+                  {
+                    "type": "number",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local26__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "__local5__"
+                      },
+                      {
+                        "type": "number",
+                        "value": 0
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 3,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "abac"
+                      },
+                      {
+                        "type": "string",
+                        "value": "example"
+                      },
+                      {
+                        "type": "string",
+                        "value": "util"
+                      },
+                      {
+                        "type": "string",
+                        "value": "extract_content_type"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local26__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local18__"
+                  }
+                ]
+              },
+              {
+                "index": 4,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local7__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local18__"
+                  }
+                ]
+              },
+              {
+                "index": 5,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local7__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "__local6__"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$0"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "args": [
+                {
+                  "type": "var",
+                  "value": "__local5__"
+                },
+                {
+                  "type": "var",
+                  "value": "__local6__"
+                }
+              ],
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "util"
+                },
+                {
+                  "type": "string",
+                  "value": "content_type_in"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": {
+                  "type": "boolean",
+                  "value": true
+                }
+              }
+            ],
+            "default": true,
+            "head": {
+              "args": [
+                {
+                  "type": "var",
+                  "value": "__local8__"
+                }
+              ],
+              "value": {
+                "type": "boolean",
+                "value": false
+              },
+              "assign": true,
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "util"
+                },
+                {
+                  "type": "string",
+                  "value": "request"
+                },
+                {
+                  "type": "string",
+                  "value": "content_type_in"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "generated": true,
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local27__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "request"
+                      },
+                      {
+                        "type": "string",
+                        "value": "headers"
+                      },
+                      {
+                        "type": "string",
+                        "value": "content-type"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "abac"
+                      },
+                      {
+                        "type": "string",
+                        "value": "example"
+                      },
+                      {
+                        "type": "string",
+                        "value": "util"
+                      },
+                      {
+                        "type": "string",
+                        "value": "content_type_in"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local27__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local9__"
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "args": [
+                {
+                  "type": "var",
+                  "value": "__local9__"
+                }
+              ],
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "util"
+                },
+                {
+                  "type": "string",
+                  "value": "request"
+                },
+                {
+                  "type": "string",
+                  "value": "content_type_in"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": {
+                  "type": "boolean",
+                  "value": true
+                }
+              }
+            ],
+            "default": true,
+            "head": {
+              "name": "can_read_test",
+              "value": {
+                "type": "boolean",
+                "value": false
+              },
+              "assign": true,
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "can_read_test"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "auth"
+                      },
+                      {
+                        "type": "string",
+                        "value": "authenticated"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "boolean",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "auth"
+                      },
+                      {
+                        "type": "string",
+                        "value": "principal"
+                      },
+                      {
+                        "type": "string",
+                        "value": "kind"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "value": "user"
+                  }
+                ]
+              },
+              {
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "entity"
+                      },
+                      {
+                        "type": "string",
+                        "value": "a"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "auth"
+                      },
+                      {
+                        "type": "string",
+                        "value": "principal"
+                      },
+                      {
+                        "type": "string",
+                        "value": "contentgrid:att1"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 3,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "entity"
+                      },
+                      {
+                        "type": "string",
+                        "value": "b"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "auth"
+                      },
+                      {
+                        "type": "string",
+                        "value": "principal"
+                      },
+                      {
+                        "type": "string",
+                        "value": "contentgrid:att2"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$2"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "can_read_test",
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "can_read_test"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "auth"
+                      },
+                      {
+                        "type": "string",
+                        "value": "authenticated"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "boolean",
+                    "value": true
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "auth"
+                      },
+                      {
+                        "type": "string",
+                        "value": "principal"
+                      },
+                      {
+                        "type": "string",
+                        "value": "kind"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "value": "user"
+                  }
+                ]
+              },
+              {
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "auth"
+                      },
+                      {
+                        "type": "string",
+                        "value": "principal"
+                      },
+                      {
+                        "type": "string",
+                        "value": "contentgrid:admin"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "boolean",
+                    "value": true
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "can_read_test",
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "can_read_test"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": {
+                  "type": "boolean",
+                  "value": true
+                }
+              }
+            ],
+            "default": true,
+            "head": {
+              "name": "allow",
+              "value": {
+                "type": "boolean",
+                "value": false
+              },
+              "assign": true,
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "allow"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "generated": true,
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local19__"
+                  },
+                  {
+                    "type": "array",
+                    "value": [
+                      {
+                        "type": "string",
+                        "value": "HEAD"
+                      },
+                      {
+                        "type": "string",
+                        "value": "GET"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "request"
+                      },
+                      {
+                        "type": "string",
+                        "value": "method"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "__local19__"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$3"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local28__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "request"
+                      },
+                      {
+                        "type": "string",
+                        "value": "path"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 3,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "count"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local28__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local20__"
+                  }
+                ]
+              },
+              {
+                "index": 4,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local20__"
+                  },
+                  {
+                    "type": "number",
+                    "value": 0
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "allow",
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "allow"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "generated": true,
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local21__"
+                  },
+                  {
+                    "type": "array",
+                    "value": [
+                      {
+                        "type": "string",
+                        "value": "HEAD"
+                      },
+                      {
+                        "type": "string",
+                        "value": "GET"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "request"
+                      },
+                      {
+                        "type": "string",
+                        "value": "method"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "__local21__"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$4"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local29__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "request"
+                      },
+                      {
+                        "type": "string",
+                        "value": "path"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 3,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "count"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local29__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local22__"
+                  }
+                ]
+              },
+              {
+                "index": 4,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local22__"
+                  },
+                  {
+                    "type": "number",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "index": 5,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "request"
+                      },
+                      {
+                        "type": "string",
+                        "value": "path"
+                      },
+                      {
+                        "type": "number",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "value": "tests"
+                  }
+                ]
+              },
+              {
+                "index": 6,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "abac"
+                      },
+                      {
+                        "type": "string",
+                        "value": "example"
+                      },
+                      {
+                        "type": "string",
+                        "value": "can_read_test"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "boolean",
+                    "value": true
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "allow",
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "allow"
+                }
+              ]
+            }
+          },
+          {
+            "body": [
+              {
+                "generated": true,
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local23__"
+                  },
+                  {
+                    "type": "array",
+                    "value": [
+                      {
+                        "type": "string",
+                        "value": "HEAD"
+                      },
+                      {
+                        "type": "string",
+                        "value": "GET"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "request"
+                      },
+                      {
+                        "type": "string",
+                        "value": "method"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "__local23__"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$5"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local30__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "request"
+                      },
+                      {
+                        "type": "string",
+                        "value": "path"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "generated": true,
+                "index": 3,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "count"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local30__"
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local24__"
+                  }
+                ]
+              },
+              {
+                "index": 4,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local24__"
+                  },
+                  {
+                    "type": "number",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "index": 5,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "input"
+                      },
+                      {
+                        "type": "string",
+                        "value": "request"
+                      },
+                      {
+                        "type": "string",
+                        "value": "path"
+                      },
+                      {
+                        "type": "number",
+                        "value": 0
+                      }
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "value": "tests"
+                  }
+                ]
+              },
+              {
+                "index": 6,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "abac"
+                      },
+                      {
+                        "type": "string",
+                        "value": "example"
+                      },
+                      {
+                        "type": "string",
+                        "value": "can_read_test"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "boolean",
+                    "value": true
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "allow",
+              "value": {
+                "type": "boolean",
+                "value": true
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "allow"
+                }
+              ]
+            }
+          }
+        ],
+        "comments": [
+          {
+            "Text": "IC0gaW5wdXQuZW50aXR5IGlzIHR5cGUgJ3Rlc3Qn",
+            "Location": {
+              "file": "abac-example",
+              "row": 21,
+              "col": 1
+            }
+          },
+          {
+            "Text": "IEVuZCBwb2xpY3kgYnBybnZ6NmxkdzRx",
+            "Location": {
+              "file": "abac-example",
+              "row": 29,
+              "col": 1
+            }
+          },
+          {
+            "Text": "IFBvbGljeSBuZmd1c3p0andwYmE=",
+            "Location": {
+              "file": "abac-example",
+              "row": 30,
+              "col": 1
+            }
+          },
+          {
+            "Text": "IC0gaW5wdXQuZW50aXR5IGlzIHR5cGUgJ3Rlc3Qn",
+            "Location": {
+              "file": "abac-example",
+              "row": 31,
+              "col": 1
+            }
+          },
+          {
+            "Text": "IEVuZCBwb2xpY3kgbmZndXN6dGp3cGJh",
+            "Location": {
+              "file": "abac-example",
+              "row": 38,
+              "col": 1
+            }
+          },
+          {
+            "Text": "IFN0YXRpYyBkZWZpbml0aW9uIEFwcGxpY2F0aW9uIFJvb3Q=",
+            "Location": {
+              "file": "abac-example",
+              "row": 41,
+              "col": 1
+            }
+          },
+          {
+            "Text": "IFBhdGggLw==",
+            "Location": {
+              "file": "abac-example",
+              "row": 44,
+              "col": 2
+            }
+          },
+          {
+            "Text": "IFBhdGggL3Rlc3Rz",
+            "Location": {
+              "file": "abac-example",
+              "row": 49,
+              "col": 2
+            }
+          },
+          {
+            "Text": "IFBhdGggL3Rlc3RzL3tpZH0=",
+            "Location": {
+              "file": "abac-example",
+              "row": 56,
+              "col": 2
+            }
+          },
+          {
+            "Text": "IHZhcmlhYmxlIGNvbXBvbmVudCB7aWR9",
+            "Location": {
+              "file": "abac-example",
+              "row": 59,
+              "col": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "example1",
+      "raw": "package opa.examples\n\nimport data.servers\nimport data.networks\nimport data.ports\n\npublic_servers[server] {\n  some k, m\n    server := servers[_]\n    server.ports[_] == ports[k].id\n    ports[k].networks[_] == networks[m].id\n    networks[m].public == true\n}",
+      "ast": {
+        "package": {
+          "path": [
+            {
+              "type": "var",
+              "value": "data"
+            },
+            {
+              "type": "string",
+              "value": "opa"
+            },
+            {
+              "type": "string",
+              "value": "examples"
+            }
+          ]
+        },
+        "rules": [
+          {
+            "body": [
+              {
+                "index": 0,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "var",
+                    "value": "__local13__"
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "servers"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$0"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 1,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "__local13__"
+                      },
+                      {
+                        "type": "string",
+                        "value": "ports"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$1"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "ports"
+                      },
+                      {
+                        "type": "var",
+                        "value": "__local11__"
+                      },
+                      {
+                        "type": "string",
+                        "value": "id"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 2,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "ports"
+                      },
+                      {
+                        "type": "var",
+                        "value": "__local11__"
+                      },
+                      {
+                        "type": "string",
+                        "value": "networks"
+                      },
+                      {
+                        "type": "var",
+                        "value": "$2"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "networks"
+                      },
+                      {
+                        "type": "var",
+                        "value": "__local12__"
+                      },
+                      {
+                        "type": "string",
+                        "value": "id"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "index": 3,
+                "terms": [
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "eq"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "ref",
+                    "value": [
+                      {
+                        "type": "var",
+                        "value": "data"
+                      },
+                      {
+                        "type": "string",
+                        "value": "networks"
+                      },
+                      {
+                        "type": "var",
+                        "value": "__local12__"
+                      },
+                      {
+                        "type": "string",
+                        "value": "public"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "boolean",
+                    "value": true
+                  }
+                ]
+              }
+            ],
+            "head": {
+              "name": "public_servers",
+              "key": {
+                "type": "var",
+                "value": "__local13__"
+              },
+              "ref": [
+                {
+                  "type": "var",
+                  "value": "public_servers"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
