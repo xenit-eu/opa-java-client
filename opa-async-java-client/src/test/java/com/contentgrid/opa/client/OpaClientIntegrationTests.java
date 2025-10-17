@@ -68,8 +68,8 @@ class OpaClientIntegrationTests {
     @Nested
     class PolicyApiTests {
 
-        private static final String PATH_EXAMPLE_1 = "fixtures/openpolicyagent.org/docs/policy/policies-example-1.txt";
-        private static final String PATH_EXAMPLE_2 = "fixtures/openpolicyagent.org/docs/policy/policies-example-2.txt";
+        private static final String PATH_EXAMPLE_1 = "fixtures/openpolicyagent.org/docs/policy/policies-example-1.rego";
+        private static final String PATH_EXAMPLE_2 = "fixtures/openpolicyagent.org/docs/policy/policies-example-2.rego";
 
         @Test
         @Order(1)
@@ -195,7 +195,7 @@ class OpaClientIntegrationTests {
     @Nested
     class CompileApiTests {
 
-        public static final String POLICY_PATH = "fixtures/openpolicyagent.org/docs/compile/compile-api-policy.txt";
+        public static final String POLICY_PATH = "fixtures/openpolicyagent.org/docs/compile/compile-api-policy.rego";
 
         @Test
         void unknownInputX_largerThan0() {
@@ -286,7 +286,8 @@ class OpaClientIntegrationTests {
 
         @Test
         void abacExample() {
-            opaClient.upsertPolicy("abac-example", loadResourceAsString("fixtures/openpolicyagent.org/docs/compile/abac-policy.txt")).join();
+            opaClient.upsertPolicy("abac-example", loadResourceAsString(
+                    "fixtures/openpolicyagent.org/docs/compile/abac-policy.rego")).join();
 
             var request = new PartialEvaluationRequest(
                     "data.abac.example.allow == true",
@@ -391,7 +392,7 @@ class OpaClientIntegrationTests {
          */
         @Test
         void partialEval_getApiDocuments() {
-            final String POLICY_PATH = "fixtures/scenarios/api-documents-policy.txt";
+            final String POLICY_PATH = "fixtures/scenarios/api-documents-policy.rego";
             opaClient.upsertPolicy("test", loadResourceAsString(POLICY_PATH)).join();
 
             var result = opaClient.compile(
