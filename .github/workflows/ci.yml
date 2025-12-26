@@ -27,7 +27,7 @@ jobs:
         run: ./gradlew publish
       - name: Upload reports
         if: success() || failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: reports-build
           path: '**/build/reports'
