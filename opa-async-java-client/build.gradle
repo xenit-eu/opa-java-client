@@ -18,13 +18,13 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-    testImplementation "org.testcontainers:junit-jupiter"
     testImplementation "org.assertj:assertj-core"
+    testImplementation "org.testcontainers:testcontainers-junit-jupiter"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
 
-    testRuntimeOnly "org.springframework.boot:spring-boot-testcontainers"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    testRuntimeOnly "org.springframework.boot:spring-boot-testcontainers" // TODO 3.5.15 > 4.0.5
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine" // TODO 5.12.2 > 6.0.3
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher" // TODO 1.12.2 > 6.0.3
     testRuntimeOnly "com.fasterxml.jackson.core:jackson-databind"
     testRuntimeOnly "org.slf4j:slf4j-simple"
 
