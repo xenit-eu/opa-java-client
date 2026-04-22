@@ -8,8 +8,5 @@ allprojects {
             withSourcesJar()
             withJavadocJar()
         }
-        repositories {
-            mavenCentral()
-        }
     }
 }

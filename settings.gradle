@@ -12,5 +12,11 @@ reckon {
     stageCalc = { inventory, targetNormal -> java.util.Optional.empty() }
 }
 
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
 include 'rego-java'
 include 'opa-async-java-client'
