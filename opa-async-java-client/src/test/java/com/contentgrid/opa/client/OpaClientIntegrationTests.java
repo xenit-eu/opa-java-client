@@ -28,9 +28,11 @@ import java.util.concurrent.ExecutionException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
@@ -68,6 +70,7 @@ class OpaClientIntegrationTests {
      * @see <a href="https://www.openpolicyagent.org/docs/latest/rest-api/#policy-api">REST Policy API</a>
      */
     @Nested
+    @TestMethodOrder(OrderAnnotation.class)
     class PolicyApiTests {
 
         private static final String PATH_EXAMPLE_1 = "fixtures/openpolicyagent.org/docs/policy/policies-example-1.rego";
