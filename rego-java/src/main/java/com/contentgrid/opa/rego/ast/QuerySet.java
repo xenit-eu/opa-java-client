@@ -23,5 +23,10 @@ public class QuerySet extends ArrayList<Query> implements Node {
     public <T> T accept(RegoVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
 

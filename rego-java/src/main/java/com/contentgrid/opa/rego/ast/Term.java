@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @JsonTypeInfo(
@@ -63,6 +64,7 @@ public abstract class Term implements Node {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
+    @ToString
     public static class Call extends Term {
 
         List<? extends Term> value;
@@ -99,6 +101,7 @@ public abstract class Term implements Node {
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode(callSuper = true)
+    @ToString
     public static class ArrayTerm extends Term {
 
         List<Term> value;
@@ -113,6 +116,7 @@ public abstract class Term implements Node {
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode(callSuper = true)
+    @ToString
     public static class SetTerm extends Term {
 
         Set<Term> value;

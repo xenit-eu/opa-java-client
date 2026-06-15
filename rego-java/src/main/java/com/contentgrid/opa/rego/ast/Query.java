@@ -26,5 +26,10 @@ public class Query extends ArrayList<Expression> implements Node {
     public <T> T accept(RegoVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
 
