@@ -8,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 public interface CompileApi {
 
@@ -23,6 +24,7 @@ public interface CompileApi {
 
     @Getter
     @RequiredArgsConstructor
+    @ToString
     class PartialEvaluationRequest {
 
         final String query;
@@ -32,11 +34,13 @@ public interface CompileApi {
     }
 
     @Data
+    @ToString
     class PartialEvalResponse {
         PartialEvalResult result;
     }
 
     @Data
+    @ToString
     class PartialEvalResult {
 
         /**

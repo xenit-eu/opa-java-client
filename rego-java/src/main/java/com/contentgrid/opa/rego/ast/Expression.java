@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -22,5 +23,13 @@ public class Expression implements Node {
     @Override
     public <T> T accept(RegoVisitor<T> visitor) {
         return visitor.visit(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Expression("
+                + "index=" + this.index + ", "
+                + "terms=" + this.terms.toString()
+                + ")";
     }
 }
