@@ -9,7 +9,6 @@ import com.contentgrid.opa.client.rest.client.jdk.converter.StringConverter;
 import com.contentgrid.opa.client.rest.http.HttpRequestHeaders;
 import com.contentgrid.opa.client.rest.http.HttpStatusException;
 import com.contentgrid.opa.client.rest.http.MediaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.contentgrid.opa.client.rest.RestClientConfiguration;
 import com.contentgrid.opa.client.rest.http.HttpMethod;
 import java.net.URI;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.json.JsonMapper;
 
 @Slf4j
 public class DefaultOpaHttpClient implements OpaHttpClient {
@@ -40,12 +40,12 @@ public class DefaultOpaHttpClient implements OpaHttpClient {
     private static final String HEADER_ACCEPT = "Accept";
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
 
-    public DefaultOpaHttpClient(HttpClient httpClient, ObjectMapper objectMapper) {
+    public DefaultOpaHttpClient(HttpClient httpClient, JsonMapper jsonMapper) {
         this.httpClient = httpClient;
 
         this.converterProcessor = new ConverterProcessor(List.of(
                 new StringConverter(),
-                new JacksonBodyConverter(objectMapper)
+                new JacksonBodyConverter(jsonMapper)
         ));
     }
 

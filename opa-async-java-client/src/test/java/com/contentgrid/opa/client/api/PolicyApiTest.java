@@ -5,24 +5,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.contentgrid.opa.client.api.PolicyApi.ListPoliciesResponse;
 import com.contentgrid.opa.rego.ast.Term;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 class PolicyApiTest {
 
     @Test
     void testPoliciesResponseObjectMapping() {
-        var objectMapper = JsonMapper.builder()
-                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .build()
-                .registerModule(new JavaTimeModule());
+        var jsonMapper = JsonMapper.builder()
+                .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+                .build();
 
         // read listpoliciesresponse.json into ListPoliciesResponse
         try (var is = getClass().getClassLoader().getResourceAsStream(
                 "com/contentgrid/opa/client/api/policyapi/listpoliciesresponse.json")) {
-            var response = objectMapper.readValue(is, ListPoliciesResponse.class);
+            var response = jsonMapper.readValue(is, ListPoliciesResponse.class);
             assertNotNull(response);
             assertThat(response.getResult().get(2).getAst().getRules().get(1).getBody()).singleElement().satisfies(expression -> {
                 assertThat(expression.getTerms()).singleElement().isInstanceOfSatisfying(Term.Bool.class, boolTerm -> {
