@@ -3,6 +3,9 @@ allprojects {
         apply from: "${rootDir}/gradle/publish.gradle"
     }
     pluginManager.withPlugin('java') {
+        // Opts in to the conventions plugin's Spotless defaults (removeUnusedImports()).
+        apply plugin: 'com.diffplug.spotless'
+
         java {
             sourceCompatibility = JavaVersion.VERSION_17
             withSourcesJar()
