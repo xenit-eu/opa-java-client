@@ -10,9 +10,6 @@ import com.contentgrid.opa.client.impl.QueryComponent;
 import com.contentgrid.opa.client.rest.OpaHttpClient;
 import com.contentgrid.opa.client.rest.RestClientConfiguration.LogSpecification;
 import com.contentgrid.opa.client.rest.client.jdk.DefaultOpaHttpClient;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.contentgrid.opa.client.api.PolicyApi;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
@@ -21,6 +18,8 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 public class OpaClient implements PolicyApi, QueryApi, DataApi, CompileApi {
 
@@ -104,9 +103,8 @@ public class OpaClient implements PolicyApi, QueryApi, DataApi, CompileApi {
                         .followRedirects(Redirect.NORMAL)
                         .build(),
                 JsonMapper.builder()
-                        .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                        .build()
-                        .registerModule(new JavaTimeModule()));
+                        .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+                        .build());
 
         private Consumer<LogSpecification> httpLogSpec = LogSpecification::verbose;
 
